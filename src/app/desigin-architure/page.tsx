@@ -15,6 +15,9 @@ import {
   DropdownVariant,
   DropdownSize,
   DropdownRounded,
+  Checkbox,
+  CheckboxSize,
+  CheckboxRounded,
 } from "@/components/ui";
 import {
   CartIcon,
@@ -30,7 +33,17 @@ import {
 } from "@/lib/icons";
 
 export default function DesignArchitecturePage() {
-  const [activeTab, setActiveTab] = useState<"dropdown" | "input" | "button">("dropdown");
+  const [activeTab, setActiveTab] = useState<"checkbox" | "dropdown" | "input" | "button">("checkbox");
+
+  // Checkbox Playground State
+  const [cbChecked, setCbChecked] = useState(true);
+  const [cbSize, setCbSize] = useState<CheckboxSize>("md");
+  const [cbRounded, setCbRounded] = useState<CheckboxRounded>("md");
+  const [cbIndeterminate, setCbIndeterminate] = useState(false);
+  const [cbDisabled, setCbDisabled] = useState(false);
+  const [cbError, setCbError] = useState(false);
+  const [cbLabel, setCbLabel] = useState("Include Cutlery & Napkins");
+  const [cbDescription, setCbDescription] = useState("Help our campus cafeteria reduce plastic waste if not needed.");
 
   // Dropdown Playground State
   const [dropdownValue, setDropdownValue] = useState("hall-a");
@@ -128,6 +141,16 @@ export default function DesignArchitecturePage() {
           {/* Navigation Tabs */}
           <div className="flex gap-2 pt-2">
             <button
+              onClick={() => setActiveTab("checkbox")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "checkbox"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Checkbox Component
+            </button>
+            <button
               onClick={() => setActiveTab("dropdown")}
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                 activeTab === "dropdown"
@@ -159,6 +182,233 @@ export default function DesignArchitecturePage() {
             </button>
           </div>
         </header>
+
+        {/* ======================= CHECKBOX COMPONENT TAB ======================= */}
+        {activeTab === "checkbox" && (
+          <div className="space-y-10">
+            {/* Interactive Checkbox Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Checkbox Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Test and preview check states, indeterminate mode, size scales, and corner radii.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Size */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Size (`size`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["sm", "md", "lg"] as CheckboxSize[]).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setCbSize(s)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            cbSize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Border Radius (`rounded`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "sm", "md", "lg", "full"] as CheckboxRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setCbRounded(r)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            cbRounded === r
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          rounded-{r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* State Toggles */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      State Modifiers
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={cbChecked}
+                          onChange={(e) => setCbChecked(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Checked</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={cbIndeterminate}
+                          onChange={(e) => setCbIndeterminate(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Indeterminate (`-`)</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={cbDisabled}
+                          onChange={(e) => setCbDisabled(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Disabled</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={cbError}
+                          onChange={(e) => setCbError(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Error State</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Custom Label and Description */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
+                        Label Text
+                      </label>
+                      <input
+                        type="text"
+                        value={cbLabel}
+                        onChange={(e) => setCbLabel(e.target.value)}
+                        className="w-full px-3 py-1.5 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
+                        Description Text
+                      </label>
+                      <input
+                        type="text"
+                        value={cbDescription}
+                        onChange={(e) => setCbDescription(e.target.value)}
+                        className="w-full px-3 py-1.5 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Preview Panel */}
+                <div className="lg:col-span-5 flex flex-col justify-center p-6 sm:p-8 rounded-xl bg-muted/30 border border-border space-y-6">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Live Preview
+                  </span>
+
+                  <div className="w-full p-4 rounded-xl bg-card border border-border">
+                    <Checkbox
+                      label={cbLabel}
+                      description={cbDescription}
+                      size={cbSize}
+                      rounded={cbRounded}
+                      checked={cbChecked}
+                      onChange={(e) => setCbChecked(e.target.checked)}
+                      indeterminate={cbIndeterminate}
+                      disabled={cbDisabled}
+                      error={cbError ? "You must accept to continue" : undefined}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <div className="text-xs text-muted-foreground mb-1 font-mono">Code Snippet:</div>
+                    <pre className="p-3 bg-card border border-border rounded-lg text-xs font-mono overflow-x-auto text-primary">
+{`<Checkbox
+  label="${cbLabel}"
+  description="${cbDescription}"
+  size="${cbSize}"
+  rounded="${cbRounded}"${cbIndeterminate ? "\n  indeterminate" : ""}${cbDisabled ? "\n  disabled" : ""}
+/>`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Real World Food Ordering Examples */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World Examples</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Meal customization, dietary preferences, and checkout options.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Meal Add-ons */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-4">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase block">
+                    Meal Customization Add-ons
+                  </span>
+                  <div className="space-y-3">
+                    <Checkbox label="Extra Cheddar Cheese" description="+$1.00 • Melted rich cheddar" defaultChecked />
+                    <Checkbox label="Spicy Peri-Peri Sauce" description="+$0.50 • Medium campus heat" />
+                    <Checkbox label="Double Patty" description="+$2.50 • Extra 100g beef" />
+                  </div>
+                </div>
+
+                {/* Dietary Filter Checkboxes */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-4">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase block">
+                    Dietary Badges (Circular)
+                  </span>
+                  <div className="space-y-3">
+                    <Checkbox label="Vegetarian Only" rounded="full" defaultChecked />
+                    <Checkbox label="100% Halal Certified" rounded="full" defaultChecked />
+                    <Checkbox label="Gluten-Free Prep" rounded="full" />
+                  </div>
+                </div>
+
+                {/* Checkout Agreements */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-4">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase block">
+                    Order Delivery Notification
+                  </span>
+                  <div className="space-y-3">
+                    <Checkbox
+                      label="SMS Delivery Alert"
+                      description="Receive a text ping when rider is at your campus door."
+                      defaultChecked
+                    />
+                    <Checkbox
+                      label="Hostel Room Drop-off"
+                      description="Leave order outside room door if in class."
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* ======================= DROPDOWN COMPONENT TAB ======================= */}
         {activeTab === "dropdown" && (
