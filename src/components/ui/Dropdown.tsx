@@ -249,10 +249,14 @@ export const Dropdown: React.FC<DropdownProps> = ({
         >
           <div className="flex items-center gap-2 overflow-hidden truncate">
             {leftIcon && (
-              <span className="shrink-0 text-muted-foreground">{leftIcon}</span>
+              <span className={cn("shrink-0 text-muted-foreground flex items-center justify-center [&>svg]:w-full [&>svg]:h-full", currentSize.icon)}>
+                {leftIcon}
+              </span>
             )}
             {selectedOption?.icon && (
-              <span className="shrink-0">{selectedOption.icon}</span>
+              <span className={cn("shrink-0 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full", currentSize.icon)}>
+                {selectedOption.icon}
+              </span>
             )}
             <span
               className={cn(
@@ -367,7 +371,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   >
                     <div className="flex items-center gap-2.5 truncate">
                       {opt.icon && (
-                        <span className="shrink-0">{opt.icon}</span>
+                        <span className={cn("shrink-0 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full", currentSize.icon)}>
+                          {opt.icon}
+                        </span>
                       )}
                       <div className="truncate">
                         <div className="truncate">{opt.label}</div>

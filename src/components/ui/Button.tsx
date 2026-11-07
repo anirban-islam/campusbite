@@ -43,11 +43,11 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-xs gap-1.5",
-  md: "h-10 px-4 py-2 text-sm gap-2",
-  lg: "h-12 px-6 text-base gap-2.5 font-medium",
-  icon: "h-10 w-10 p-0 justify-center",
-  "icon-sm": "h-8 w-8 p-0 justify-center",
+  sm: "h-8 px-3 text-xs gap-1.5 [&_svg]:w-3.5 [&_svg]:h-3.5 [&_svg]:shrink-0",
+  md: "h-10 px-4 py-2 text-sm gap-2 [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0",
+  lg: "h-12 px-6 text-base gap-2.5 font-medium [&_svg]:w-5 [&_svg]:h-5 [&_svg]:shrink-0",
+  icon: "h-10 w-10 p-0 justify-center [&_svg]:w-5 [&_svg]:h-5 [&_svg]:shrink-0",
+  "icon-sm": "h-8 w-8 p-0 justify-center [&_svg]:w-4 [&_svg]:h-4 [&_svg]:shrink-0",
 };
 
 const roundedStyles: Record<ButtonRounded, string> = {
@@ -141,9 +141,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         ) : (
           <>
-            {leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
+            {leftIcon && (
+              <span className="inline-flex shrink-0 items-center justify-center">
+                {leftIcon}
+              </span>
+            )}
             {children}
-            {rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
+            {rightIcon && (
+              <span className="inline-flex shrink-0 items-center justify-center">
+                {rightIcon}
+              </span>
+            )}
           </>
         )}
       </button>

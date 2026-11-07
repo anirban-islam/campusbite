@@ -389,6 +389,34 @@ export const GraduationCapIcon = createIcon(
 export const GraduationCap = GraduationCapIcon;
 export const CampusIcon = GraduationCapIcon;
 
+/** Tag / Discount */
+export const TagIcon = createIcon(
+  "TagIcon",
+  <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z M7 7h.01" />
+);
+export const Tag = TagIcon;
+
+/** Sparkles / New */
+export const SparklesIcon = createIcon(
+  "SparklesIcon",
+  <>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+    <path d="M5 3v4" />
+    <path d="M19 17v4" />
+    <path d="M3 5h4" />
+    <path d="M17 19h4" />
+  </>
+);
+export const Sparkles = SparklesIcon;
+
+/** Flame / Hot / Popular */
+export const FlameIcon = createIcon(
+  "FlameIcon",
+  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+);
+export const Flame = FlameIcon;
+export const HotFoodIcon = FlameIcon;
+
 /** Clock / Time */
 export const ClockIcon = createIcon(
   "ClockIcon",

@@ -18,6 +18,15 @@ import {
   Checkbox,
   CheckboxSize,
   CheckboxRounded,
+  Textarea,
+  TextareaVariant,
+  TextareaSize,
+  TextareaRounded,
+  TextareaResize,
+  Badge,
+  BadgeVariant,
+  BadgeSize,
+  BadgeRounded,
 } from "@/components/ui";
 import {
   CartIcon,
@@ -30,10 +39,36 @@ import {
   Pizza,
   Salad,
   Store,
+  Flame,
+  Sparkles,
+  Tag,
+  Check,
 } from "@/lib/icons";
 
 export default function DesignArchitecturePage() {
-  const [activeTab, setActiveTab] = useState<"checkbox" | "dropdown" | "input" | "button">("checkbox");
+  const [activeTab, setActiveTab] = useState<"badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("badge");
+
+  // Badge Playground State
+  const [badgeVariant, setBadgeVariant] = useState<BadgeVariant>("popular");
+  const [badgeSize, setBadgeSize] = useState<BadgeSize>("md");
+  const [badgeRounded, setBadgeRounded] = useState<BadgeRounded>("full");
+  const [badgeDot, setBadgeDot] = useState(false);
+  const [badgePulse, setBadgePulse] = useState(false);
+  const [badgeWithIcon, setBadgeWithIcon] = useState(true);
+  const [badgeText, setBadgeText] = useState("Most Popular");
+
+  // Textarea Playground State
+  const [taVariant, setTaVariant] = useState<TextareaVariant>("outline");
+  const [taSize, setTaSize] = useState<TextareaSize>("md");
+  const [taRounded, setTaRounded] = useState<TextareaRounded>("lg");
+  const [taResize, setTaResize] = useState<TextareaResize>("vertical");
+  const [taLabel, setTaLabel] = useState("Special Food Instructions");
+  const [taPlaceholder, setTaPlaceholder] = useState("e.g. Please put spicy sauce on the side, extra crispy fries...");
+  const [taHelper, setTaHelper] = useState("The campus cafeteria kitchen will review your note.");
+  const [taError, setTaError] = useState(false);
+  const [taDisabled, setTaDisabled] = useState(false);
+  const [taRequired, setTaRequired] = useState(false);
+  const [taShowCount, setTaShowCount] = useState(true);
 
   // Checkbox Playground State
   const [cbChecked, setCbChecked] = useState(true);
@@ -139,7 +174,27 @@ export default function DesignArchitecturePage() {
           </p>
 
           {/* Navigation Tabs */}
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-wrap gap-2 pt-2">
+            <button
+              onClick={() => setActiveTab("badge")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "badge"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Badge Component
+            </button>
+            <button
+              onClick={() => setActiveTab("textarea")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "textarea"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Textarea Component
+            </button>
             <button
               onClick={() => setActiveTab("checkbox")}
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
@@ -182,6 +237,598 @@ export default function DesignArchitecturePage() {
             </button>
           </div>
         </header>
+
+        {/* ======================= BADGE COMPONENT TAB ======================= */}
+        {activeTab === "badge" && (
+          <div className="space-y-10">
+            {/* Interactive Badge Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Badge Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Test and preview badges with custom variants, icons, live status dots, and sizes.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Variant */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Variant (`variant`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(
+                        [
+                          "popular",
+                          "new",
+                          "discount",
+                          "available",
+                          "primary",
+                          "secondary",
+                          "outline",
+                          "subtle",
+                          "destructive",
+                        ] as BadgeVariant[]
+                      ).map((v) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => {
+                            setBadgeVariant(v);
+                            if (v === "popular") setBadgeText("Most Popular");
+                            else if (v === "new") setBadgeText("New Dish");
+                            else if (v === "discount") setBadgeText("20% OFF");
+                            else if (v === "available") {
+                              setBadgeText("Available Now");
+                              setBadgeDot(true);
+                              setBadgePulse(true);
+                            }
+                          }}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all capitalize ${
+                            badgeVariant === v
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Size (`size`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["sm", "md", "lg"] as BadgeSize[]).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setBadgeSize(s)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            badgeSize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Border Radius (`rounded`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "sm", "md", "lg", "full"] as BadgeRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setBadgeRounded(r)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            badgeRounded === r
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          rounded-{r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Modifiers */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Badge Modifiers
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={badgeDot}
+                          onChange={(e) => setBadgeDot(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Dot Indicator (`dot`)</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={badgePulse}
+                          onChange={(e) => setBadgePulse(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Pulsing Dot (`pulse`)</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={badgeWithIcon}
+                          onChange={(e) => setBadgeWithIcon(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>With Icon</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Custom Label */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
+                      Badge Text
+                    </label>
+                    <input
+                      type="text"
+                      value={badgeText}
+                      onChange={(e) => setBadgeText(e.target.value)}
+                      className="w-full max-w-sm px-3 py-1.5 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                </div>
+
+                {/* Live Preview Panel */}
+                <div className="lg:col-span-5 flex flex-col items-center justify-center p-8 rounded-xl bg-muted/30 border border-border min-h-[260px] space-y-6">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Live Preview
+                  </span>
+
+                  <div className="flex items-center justify-center p-6 bg-card border border-border rounded-xl shadow-xs">
+                    <Badge
+                      variant={badgeVariant}
+                      size={badgeSize}
+                      rounded={badgeRounded}
+                      dot={badgeDot}
+                      pulse={badgePulse}
+                      leftIcon={
+                        badgeWithIcon ? (
+                          badgeVariant === "popular" ? (
+                            <Flame />
+                          ) : badgeVariant === "new" ? (
+                            <Sparkles />
+                          ) : badgeVariant === "discount" ? (
+                            <Tag />
+                          ) : badgeVariant === "available" ? (
+                            <Check />
+                          ) : undefined
+                        ) : undefined
+                      }
+                    >
+                      {badgeText}
+                    </Badge>
+                  </div>
+
+                  <div className="w-full">
+                    <div className="text-xs text-muted-foreground mb-1 font-mono">Code Snippet:</div>
+                    <pre className="p-3 bg-card border border-border rounded-lg text-xs font-mono overflow-x-auto text-primary">
+{`<Badge
+  variant="${badgeVariant}"
+  size="${badgeSize}"
+  rounded="${badgeRounded}"${badgeDot ? "\n  dot" : ""}${badgePulse ? "\n  pulse" : ""}
+>
+  ${badgeText}
+</Badge>`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* The 4 Special Food & Menu Variants Showcase */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Core Food Platform Badges</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Specialized variants requested for CampusBite dishes, deals, and cafeteria items.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Popular */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-semibold text-muted-foreground">
+                      variant="popular"
+                    </span>
+                    <Badge variant="popular" leftIcon={<Flame />}>
+                      Popular
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Warm brand primary color (#c34e31) for student favorite meals and top-rated orders.
+                  </p>
+                </div>
+
+                {/* New */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-semibold text-muted-foreground">
+                      variant="new"
+                    </span>
+                    <Badge variant="new" leftIcon={<Sparkles />}>
+                      New Dish
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Fresh blue highlight to catch the eye for new seasonal items and menu additions.
+                  </p>
+                </div>
+
+                {/* Discount */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-semibold text-muted-foreground">
+                      variant="discount"
+                    </span>
+                    <Badge variant="discount" leftIcon={<Tag />}>
+                      25% OFF
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Warm secondary amber color for student deals, meal combos, and promo discounts.
+                  </p>
+                </div>
+
+                {/* Available */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-semibold text-muted-foreground">
+                      variant="available"
+                    </span>
+                    <Badge variant="available" dot pulse>
+                      In Stock
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Fresh green status badge with live pulsing dot for immediate counter pickup availability.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Real World Food Card Examples */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World Menu Item Previews</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  How badges look attached to food items and campus dining cards.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Menu Item 1: Popular Burger */}
+                <div className="p-5 rounded-2xl border border-border bg-card shadow-xs space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="popular" leftIcon={<Flame />}>
+                      Campus Favorite
+                    </Badge>
+                    <span className="text-xs font-semibold text-primary font-mono">$6.50</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground">Double Peri-Peri Smash Burger</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Two grilled beef patties with melted cheddar and signature campus sauce.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Menu Item 2: New Beverage */}
+                <div className="p-5 rounded-2xl border border-border bg-card shadow-xs space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="new" leftIcon={<Sparkles />}>
+                      New Arrival
+                    </Badge>
+                    <span className="text-xs font-semibold text-primary font-mono">$4.20</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground">Iced Caramel Cinnamon Brew</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Slow-steeped cold brew with oat milk and brown sugar syrup.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Menu Item 3: Discount Combo with Available Status */}
+                <div className="p-5 rounded-2xl border border-border bg-card shadow-xs space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="discount" leftIcon={<Tag />}>
+                      Save $3.00
+                    </Badge>
+                    <Badge variant="available" dot pulse size="sm">
+                      Ready in 5m
+                    </Badge>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground">Study Snack Power Combo</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Includes sandwich, fresh chips, and cold lemonade beverage.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* ======================= TEXTAREA COMPONENT TAB ======================= */}
+        {activeTab === "textarea" && (
+          <div className="space-y-10">
+            {/* Interactive Textarea Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Textarea Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Test and preview multi-line input variants, size scales, corner radii, and live character counting.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Variant */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Variant (`variant`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["outline", "filled", "subtle"] as TextareaVariant[]).map((v) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => setTaVariant(v)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            taVariant === v
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Size (`textareaSize`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["sm", "md", "lg"] as TextareaSize[]).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setTaSize(s)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            taSize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Border Radius (`rounded`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "sm", "md", "lg", "xl", "full"] as TextareaRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setTaRounded(r)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            taRounded === r
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          rounded-{r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Resize */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Resize Behavior (`resize`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "vertical", "horizontal", "both"] as TextareaResize[]).map((rs) => (
+                        <button
+                          key={rs}
+                          type="button"
+                          onClick={() => setTaResize(rs)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            taResize === rs
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          resize-{rs}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Modifiers */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      State & Count Modifiers
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={taShowCount}
+                          onChange={(e) => setTaShowCount(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Character Counter (`showCount`)</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={taRequired}
+                          onChange={(e) => setTaRequired(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Required Asterisk</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={taError}
+                          onChange={(e) => setTaError(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Error State</span>
+                      </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={taDisabled}
+                          onChange={(e) => setTaDisabled(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Disabled</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Preview Panel */}
+                <div className="lg:col-span-5 flex flex-col justify-center p-6 sm:p-8 rounded-xl bg-muted/30 border border-border space-y-6">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Live Preview
+                  </span>
+
+                  <div className="w-full">
+                    <Textarea
+                      label={taLabel}
+                      placeholder={taPlaceholder}
+                      helperText={!taError ? taHelper : undefined}
+                      error={taError ? "Please provide cooking instructions" : undefined}
+                      variant={taVariant}
+                      textareaSize={taSize}
+                      rounded={taRounded}
+                      resize={taResize}
+                      showCount={taShowCount}
+                      maxLength={150}
+                      disabled={taDisabled}
+                      required={taRequired}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <div className="text-xs text-muted-foreground mb-1 font-mono">Code Snippet:</div>
+                    <pre className="p-3 bg-card border border-border rounded-lg text-xs font-mono overflow-x-auto text-primary">
+{`<Textarea
+  label="${taLabel}"
+  placeholder="${taPlaceholder}"
+  variant="${taVariant}"
+  textareaSize="${taSize}"
+  rounded="${taRounded}"${taShowCount ? "\n  showCount\n  maxLength={150}" : ""}${taDisabled ? "\n  disabled" : ""}
+/>`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Real World Examples */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World Examples</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Order delivery notes, kitchen allergy warnings, and dining feedback.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Kitchen Allergy & Customization */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase">
+                    Kitchen Dietary Notes
+                  </span>
+                  <Textarea
+                    label="Allergy Instructions"
+                    placeholder="e.g. Peanut allergy, gluten intolerant..."
+                    variant="outline"
+                    showCount
+                    maxLength={100}
+                    helperText="Kitchen chef will strictly adhere to allergy notes."
+                  />
+                </div>
+
+                {/* Delivery Drop-off Instructions (Filled) */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase">
+                    Rider Drop-off (Filled)
+                  </span>
+                  <Textarea
+                    label="Hostel Room Directions"
+                    defaultValue="Leave order with security desk if after 9 PM. Call upon arrival."
+                    variant="filled"
+                    rows={3}
+                  />
+                </div>
+
+                {/* Review & Feedback (Subtle) */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase">
+                    Meal Review (Subtle)
+                  </span>
+                  <Textarea
+                    label="Cafeteria Review"
+                    placeholder="How was your spicy burger meal?"
+                    variant="subtle"
+                    showCount
+                    maxLength={250}
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* ======================= CHECKBOX COMPONENT TAB ======================= */}
         {activeTab === "checkbox" && (

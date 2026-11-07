@@ -107,7 +107,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {leftIcon && (
             <div
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground pointer-events-none transition-colors",
+                "absolute top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground pointer-events-none transition-colors [&>svg]:w-full [&>svg]:h-full [&>svg]:shrink-0",
                 inputSize === "sm" ? "left-2.5 w-3.5 h-3.5" : inputSize === "lg" ? "left-3.5 w-5 h-5" : "left-3 w-4 h-4"
               )}
             >
@@ -173,7 +173,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 />
               </svg>
             ) : rightIcon ? (
-              <div className="text-muted-foreground">{rightIcon}</div>
+              <div
+                className={cn(
+                  "text-muted-foreground flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:shrink-0",
+                  inputSize === "sm" ? "w-3.5 h-3.5" : inputSize === "lg" ? "w-5 h-5" : "w-4 h-4"
+                )}
+              >
+                {rightIcon}
+              </div>
             ) : null}
           </div>
         </div>

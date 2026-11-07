@@ -118,13 +118,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <label
           htmlFor={inputId}
           className={cn(
-            "group inline-flex items-start select-none cursor-pointer",
+            "group inline-flex select-none cursor-pointer",
+            description ? "items-start" : "items-center",
             currentSize.gap,
             disabled && "opacity-50 cursor-not-allowed pointer-events-none"
           )}
         >
           {/* Custom Styled Box Container */}
-          <div className="relative flex items-center justify-center shrink-0 mt-0.5">
+          <div className={cn("relative flex items-center justify-center shrink-0", description && "mt-0.5")}>
             {/* Native Screen-Reader Accessible Input */}
             <input
               ref={combinedRef}
