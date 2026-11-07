@@ -1,26 +1,119 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Brand Primary Colors */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-subtle: var(--primary-subtle);
 
-@theme inline {
+  --color-primary-50: #fdf6f4;
+  --color-primary-100: #fbebe6;
+  --color-primary-200: #f7d4ca;
+  --color-primary-300: #efb2a2;
+  --color-primary-400: #e3866f;
+  --color-primary-500: #c34e31;
+  --color-primary-600: #b03f24;
+  --color-primary-700: #93331b;
+  --color-primary-800: #792b19;
+  --color-primary-900: #642718;
+  --color-primary-950: #37120a;
+
+  /* Secondary / Accent */
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-subtle: var(--secondary-subtle);
+
+  /* Layout & Surfaces */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Muted & Neutrals */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Borders, Inputs & Ring */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Semantic Feedback */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-subtle: var(--destructive-subtle);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-subtle: var(--success-subtle);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-subtle: var(--warning-subtle);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-subtle: var(--info-subtle);
+
+  /* Typography */
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* Brand Primary (#c34e31) */
+  --primary: #c34e31;
+  --primary-hover: #b03f24;
+  --primary-foreground: #ffffff;
+  --primary-subtle: #fbebe6;
+
+  /* Secondary / Accent */
+  --secondary: #e5732f;
+  --secondary-hover: #cc5e1d;
+  --secondary-foreground: #ffffff;
+  --secondary-subtle: #fff1e8;
+
+  /* Base & Surfaces */
+  --background: #fdfcfb;
+  --foreground: #1c1917;
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+  --popover: #ffffff;
+  --popover-foreground: #1c1917;
+
+  /* Muted & Warm Neutrals */
+  --muted: #f4efe9;
+  --muted-foreground: #78716c;
+
+  /* Borders & Focus Rings */
+  --border: #e7e2dc;
+  --input: #e7e2dc;
+  --ring: #c34e31;
+
+  /* Feedback States */
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --destructive-subtle: #fef2f2;
+
+  --success: #15803d;
+  --success-foreground: #ffffff;
+  --success-subtle: #f0fdf4;
+
+  --warning: #d97706;
+  --warning-foreground: #ffffff;
+  --warning-subtle: #fffbeb;
+
+  --info: #0284c7;
+  --info-foreground: #ffffff;
+  --info-subtle: #f0f9ff;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
 }
