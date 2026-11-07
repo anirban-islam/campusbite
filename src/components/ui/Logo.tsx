@@ -4,10 +4,14 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import logoIcon from "../../../public/Logo-icon.png";
+import logoFull from "../../../public/Logo.png";
 
 export type LogoSize = "sm" | "md" | "lg" | "xl";
+export type LogoVariant = "icon" | "full";
 
 export interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: LogoVariant;
   size?: LogoSize;
   asLink?: boolean;
   href?: string;
@@ -15,31 +19,23 @@ export interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   alt?: string;
 }
 
-const sizeStyles: Record<LogoSize, { container: string; height: number; width: number }> = {
-  sm: {
-    container: "h-9 sm:h-10",
-    height: 40,
-    width: 60,
-  },
-  md: {
-    container: "h-11 sm:h-12",
-    height: 48,
-    width: 72,
-  },
-  lg: {
-    container: "h-14 sm:h-16",
-    height: 64,
-    width: 96,
-  },
-  xl: {
-    container: "h-20 sm:h-24",
-    height: 96,
-    width: 144,
-  },
+const iconSizeStyles: Record<LogoSize, string> = {
+  sm: "h-9 w-auto",
+  md: "h-11 w-auto",
+  lg: "h-12 sm:h-13 md:h-14 w-auto",
+  xl: "h-16 sm:h-18 w-auto",
+};
+
+const fullSizeStyles: Record<LogoSize, string> = {
+  sm: "h-8 sm:h-9 w-auto",
+  md: "h-11 sm:h-12 w-auto",
+  lg: "h-14 sm:h-16 w-auto",
+  xl: "h-18 sm:h-20 w-auto",
 };
 
 export function Logo({
-  size = "md",
+  variant = "icon",
+  size = "lg",
   asLink = true,
   href = "/",
   priority = true,
@@ -47,23 +43,23 @@ export function Logo({
   className,
   ...props
 }: LogoProps) {
-  const currentSize = sizeStyles[size];
+  const containerClass = variant === "icon" ? iconSizeStyles[size] : fullSizeStyles[size];
+  const imageSrc = variant === "icon" ? logoIcon : logoFull;
 
   const content = (
     <div
       className={cn(
-        "relative inline-flex items-center select-none shrink-0 transition-transform duration-150 active:scale-98",
-        currentSize.container,
+        "relative inline-flex items-center justify-center select-none shrink-0 transition-transform duration-150 active:scale-95",
+        containerClass,
         className
       )}
       {...props}
     >
       <Image
-        src="/Logo.png"
+        src={imageSrc}
         alt={alt}
-        width={1536}
-        height={1024}
         priority={priority}
+        unoptimized
         className="h-full w-auto object-contain max-h-full"
       />
     </div>
@@ -73,7 +69,7 @@ export function Logo({
     return (
       <Link
         href={href}
-        className="inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-xl group"
+        className="inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-sm group"
         aria-label="CampusBite Home"
       >
         {content}
@@ -85,4 +81,3 @@ export function Logo({
 }
 
 export default Logo;
-

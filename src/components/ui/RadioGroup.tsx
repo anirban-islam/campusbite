@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 export type RadioSize = "sm" | "md" | "lg";
 export type RadioVariant = "default" | "card";
 export type RadioOrientation = "vertical" | "horizontal";
+export type RadioRounded = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 
 export interface RadioOption {
   value: string;
@@ -29,6 +30,7 @@ interface RadioGroupContextValue {
   onChange: (val: string) => void;
   size: RadioSize;
   variant: RadioVariant;
+  rounded?: RadioRounded;
   disabled?: boolean;
   hasError?: boolean;
 }
@@ -92,6 +94,16 @@ const sizeStyles: Record<
   },
 };
 
+const roundedStyles: Record<RadioRounded, string> = {
+  none: "rounded-none",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  full: "rounded-full",
+};
+
 /* ==========================================================================
    RadioGroupItem (Compound Item Component)
    ========================================================================== */
@@ -105,6 +117,7 @@ export interface RadioGroupItemProps
   badge?: React.ReactNode;
   size?: RadioSize;
   variant?: RadioVariant;
+  rounded?: RadioRounded;
 }
 
 export const RadioGroupItem = forwardRef<HTMLInputElement, RadioGroupItemProps>(
@@ -119,6 +132,7 @@ export const RadioGroupItem = forwardRef<HTMLInputElement, RadioGroupItemProps>(
       disabled,
       size: itemSize,
       variant: itemVariant,
+      rounded: itemRounded,
       className,
       children,
       ...props
@@ -133,6 +147,7 @@ export const RadioGroupItem = forwardRef<HTMLInputElement, RadioGroupItemProps>(
     const isDisabled = disabled ?? group.disabled;
     const effectiveSize = itemSize ?? group.size;
     const effectiveVariant = itemVariant ?? group.variant;
+    const effectiveRounded = itemRounded ?? group.rounded ?? "xl";
     const currentSize = sizeStyles[effectiveSize];
     const hasError = group.hasError;
 
@@ -141,7 +156,8 @@ export const RadioGroupItem = forwardRef<HTMLInputElement, RadioGroupItemProps>(
         <label
           htmlFor={inputId}
           className={cn(
-            "group relative flex items-start justify-between rounded-xl transition-all duration-150 cursor-pointer select-none",
+            "group relative flex items-start justify-between transition-all duration-150 cursor-pointer select-none",
+            roundedStyles[effectiveRounded],
             currentSize.cardPadding,
             currentSize.cardGap,
             isChecked
@@ -373,6 +389,7 @@ export interface RadioGroupProps {
   disabled?: boolean;
   size?: RadioSize;
   variant?: RadioVariant;
+  rounded?: RadioRounded;
   orientation?: RadioOrientation;
   options?: RadioOption[];
   label?: React.ReactNode;
@@ -394,6 +411,7 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
       disabled = false,
       size = "md",
       variant = "default",
+      rounded = "xl",
       orientation = "vertical",
       options,
       label,
@@ -438,6 +456,7 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
           onChange: handleValueChange,
           size,
           variant,
+          rounded,
           disabled,
           hasError,
         }}
@@ -482,6 +501,7 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                     icon={opt.icon}
                     badge={opt.badge}
                     disabled={opt.disabled}
+                    rounded={rounded}
                   />
                 ))
               : children}
