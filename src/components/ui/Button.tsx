@@ -14,7 +14,15 @@ export type ButtonVariant =
 
 export type ButtonSize = "sm" | "md" | "lg" | "icon" | "icon-sm";
 
-export type ButtonRounded = "none" | "sm" | "md" | "lg" | "xl" | "full";
+export type ButtonRounded =
+  | "none"
+  | "sm"
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | "full";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -58,6 +66,8 @@ const roundedStyles: Record<ButtonRounded, string> = {
   md: "rounded-md",
   lg: "rounded-lg",
   xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
   full: "rounded-full",
 };
 
@@ -75,8 +85,8 @@ const dialogRoundedToButtonRounded: Record<DialogRounded, ButtonRounded> = {
   md: "md",
   lg: "lg",
   xl: "xl",
-  "2xl": "lg",
-  "3xl": "xl",
+  "2xl": "2xl",
+  "3xl": "3xl",
   full: "full",
 };
 
@@ -85,7 +95,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       className,
       variant = "primary",
-      size = "md",
+      size,
       rounded,
       isLoading = false,
       loadingText,
@@ -100,7 +110,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const dialog = useDialog();
     const drawer = useDrawer();
-    const isIconOnly = size === "icon" || size === "icon-sm";
+
+    // Automatically inherit size from modal/drawer context ("sm" by default inside modal/drawer)
+    const isInsideOverlay = Boolean(dialog || drawer);
+    const effectiveSize: ButtonSize = size ?? (isInsideOverlay ? "sm" : "md");
+
+    const isIconOnly = effectiveSize === "icon" || effectiveSize === "icon-sm";
     const isDisabled = disabled || isLoading;
 
     // Automatically inherit rounded style from parent Dialog or Drawer
@@ -110,7 +125,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       : undefined;
 
     const resolvedRounded =
-      roundedStyles[rounded ?? inheritedRounded ?? defaultRoundedBySize[size]];
+      roundedStyles[rounded ?? inheritedRounded ?? defaultRoundedBySize[effectiveSize]];
 
     return (
       <button
@@ -123,7 +138,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
           variantStyles[variant],
-          sizeStyles[size],
+          sizeStyles[effectiveSize],
           resolvedRounded,
           className
         )}
@@ -134,7 +149,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             <svg
               className={cn(
                 "animate-spin shrink-0 text-current",
-                size === "sm" || size === "icon-sm" ? "h-3.5 w-3.5" : "h-4 w-4",
+                effectiveSize === "sm" || effectiveSize === "icon-sm" ? "h-3.5 w-3.5" : "h-4 w-4",
                 loadingText || (!isIconOnly && children) ? "-ml-0.5" : ""
               )}
               xmlns="http://www.w3.org/2000/svg"

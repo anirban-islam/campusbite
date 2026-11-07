@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import {
   Button,
   ButtonVariant,
@@ -55,6 +56,21 @@ import {
   DrawerDirection,
   DrawerSize,
   DrawerRounded,
+  Skeleton,
+  SkeletonText,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonFoodCard,
+  SkeletonRounded,
+  SkeletonAnimation,
+  EmptyState,
+  EmptyStateVariant,
+  EmptyStateSize,
+  EmptyStateRounded,
+  EmptyStateIcon,
+  EmptyStateTitle,
+  EmptyStateDescription,
+  EmptyStateActions,
 } from "@/components/ui";
 import {
   CartIcon,
@@ -77,7 +93,18 @@ import {
 } from "@/lib/icons";
 
 export default function DesignArchitecturePage() {
-  const [activeTab, setActiveTab] = useState<"drawer" | "dialog" | "radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("drawer");
+  const [activeTab, setActiveTab] = useState<"emptystate" | "skeleton" | "drawer" | "dialog" | "radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("emptystate");
+
+  // EmptyState Playground State
+  const [emptyVariant, setEmptyVariant] = useState<EmptyStateVariant>("dashed");
+  const [emptySize, setEmptySize] = useState<EmptyStateSize>("md");
+  const [emptyRounded, setEmptyRounded] = useState<EmptyStateRounded>("2xl");
+  const [emptyScenario, setEmptyScenario] = useState<"cart" | "search" | "closed" | "orders">("cart");
+
+  // Skeleton Playground State
+  const [skeletonAnimation, setSkeletonAnimation] = useState<SkeletonAnimation>("shimmer");
+  const [skeletonRounded, setSkeletonRounded] = useState<SkeletonRounded>("md");
+  const [isLoadingContent, setIsLoadingContent] = useState(true);
 
   // Drawer Playground State
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -198,6 +225,7 @@ export default function DesignArchitecturePage() {
   ];
   const btnSizes: ButtonSize[] = ["sm", "md", "lg", "icon", "icon-sm"];
   const roundedOptions = ["none", "sm", "md", "lg", "xl", "full"] as const;
+  const btnRoundedOptions: ButtonRounded[] = ["none", "sm", "md", "lg", "xl", "2xl", "3xl", "full"];
 
   const inputVariants: InputVariant[] = ["outline", "filled", "subtle"];
   const inputSizes: InputSize[] = ["sm", "md", "lg"];
@@ -229,6 +257,26 @@ export default function DesignArchitecturePage() {
 
           {/* Navigation Tabs */}
           <div className="flex flex-wrap gap-2 pt-2">
+            <button
+              onClick={() => setActiveTab("emptystate")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "emptystate"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Empty State Component
+            </button>
+            <button
+              onClick={() => setActiveTab("skeleton")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "skeleton"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Skeleton Component
+            </button>
             <button
               onClick={() => setActiveTab("drawer")}
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
@@ -321,6 +369,614 @@ export default function DesignArchitecturePage() {
             </button>
           </div>
         </header>
+
+        {/* ======================= EMPTY STATE COMPONENT TAB ======================= */}
+        {activeTab === "emptystate" && (
+          <div className="space-y-10">
+            {/* Interactive EmptyState Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Empty State Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Versatile empty state indicators with optical icon scaling, configurable rounded corners, 4 visual variants, and 3 proportional sizes.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-4 space-y-5 bg-muted/20 border border-border p-5 rounded-xl">
+                  {/* Scenario Presets */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Preset Scenario
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(
+                        [
+                          { key: "cart", label: "Empty Tray" },
+                          { key: "search", label: "No Results" },
+                          { key: "closed", label: "Closed Counter" },
+                          { key: "orders", label: "No Deliveries" },
+                        ] as const
+                      ).map((sc) => (
+                        <button
+                          key={sc.key}
+                          onClick={() => setEmptyScenario(sc.key)}
+                          className={cn(
+                            "px-3 py-2 text-xs font-semibold rounded-lg border transition-all text-center",
+                            emptyScenario === sc.key
+                              ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                              : "bg-card border-border text-foreground hover:bg-muted"
+                          )}
+                        >
+                          {sc.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Variant */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Variant (<code className="text-primary font-mono text-[11px]">{emptyVariant}</code>)
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(["default", "subtle", "card", "dashed"] as EmptyStateVariant[]).map((v) => (
+                        <button
+                          key={v}
+                          onClick={() => setEmptyVariant(v)}
+                          className={cn(
+                            "px-3 py-1.5 text-xs font-semibold rounded-lg border capitalize transition-all",
+                            emptyVariant === v
+                              ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                              : "bg-card border-border text-foreground hover:bg-muted"
+                          )}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Size (<code className="text-primary font-mono text-[11px]">{emptySize}</code>)
+                    </label>
+                    <div className="flex gap-2">
+                      {(["sm", "md", "lg"] as EmptyStateSize[]).map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => setEmptySize(s)}
+                          className={cn(
+                            "flex-1 py-1.5 text-xs font-semibold rounded-lg border uppercase transition-all",
+                            emptySize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                              : "bg-card border-border text-foreground hover:bg-muted"
+                          )}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded (Corner Radius) */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Corner Radius (<code className="text-primary font-mono text-[11px]">{emptyRounded}</code>)
+                    </label>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {(["none", "sm", "md", "lg", "xl", "2xl", "3xl", "full"] as EmptyStateRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          onClick={() => setEmptyRounded(r)}
+                          className={cn(
+                            "py-1 text-[11px] font-semibold rounded-md border transition-all",
+                            emptyRounded === r
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Preview Box */}
+                <div className="lg:col-span-8 space-y-4">
+                  <div className="p-6 sm:p-10 bg-muted/10 border border-border/70 rounded-2xl flex items-center justify-center min-h-[360px]">
+                    {emptyScenario === "cart" && (
+                      <EmptyState
+                        variant={emptyVariant}
+                        size={emptySize}
+                        rounded={emptyRounded}
+                        icon={<CartIcon />}
+                        badge={<Badge variant="subtle" size="sm">Tray is empty</Badge>}
+                        title="Your campus food tray is empty"
+                        description="Explore daily specials, artisan pizzas, and refreshing cold drinks from our central dining halls."
+                        action={
+                          <Button variant="primary" size="sm">
+                            Explore Dining Halls
+                          </Button>
+                        }
+                        secondaryAction={
+                          <Button variant="outline" size="sm">
+                            Re-order Past Meal
+                          </Button>
+                        }
+                      />
+                    )}
+
+                    {emptyScenario === "search" && (
+                      <EmptyState
+                        variant={emptyVariant}
+                        size={emptySize}
+                        rounded={emptyRounded}
+                        icon={<Search />}
+                        badge={<Badge variant="secondary" size="sm">0 results found</Badge>}
+                        title="No cafeteria dishes found"
+                        description="We couldn't find matches for your search keywords. Try adjusting dietary filters or browse popular categories."
+                        action={
+                          <Button variant="primary" size="sm">
+                            Clear Search Filter
+                          </Button>
+                        }
+                        secondaryAction={
+                          <Button variant="ghost" size="sm">
+                            View All Categories
+                          </Button>
+                        }
+                      />
+                    )}
+
+                    {emptyScenario === "closed" && (
+                      <EmptyState
+                        variant={emptyVariant}
+                        size={emptySize}
+                        rounded={emptyRounded}
+                        icon={<Clock />}
+                        badge={<Badge variant="popular" size="sm">Opens at 5:00 PM</Badge>}
+                        title="Night Kitchen station is closed"
+                        description="This food counter is currently prepping for dinner service. Check nearby active stations for fast pickup."
+                        action={
+                          <Button variant="primary" size="sm">
+                            Browse Open Food Stalls
+                          </Button>
+                        }
+                      />
+                    )}
+
+                    {emptyScenario === "orders" && (
+                      <EmptyState
+                        variant={emptyVariant}
+                        size={emptySize}
+                        rounded={emptyRounded}
+                        icon={<Bike />}
+                        badge={<Badge variant="available" size="sm">Ready to order</Badge>}
+                        title="No active deliveries in progress"
+                        description="You don't have any ongoing meal deliveries or pickup orders. Place an order to track live preparation!"
+                        action={
+                          <Button variant="primary" size="sm">
+                            Order Campus Lunch
+                          </Button>
+                        }
+                      />
+                    )}
+                  </div>
+
+                  {/* Code snippet */}
+                  <div className="p-4 rounded-xl bg-muted/40 border border-border font-mono text-xs overflow-x-auto text-muted-foreground">
+                    <span className="text-primary">&lt;EmptyState</span>
+                    <br />
+                    &nbsp;&nbsp;variant=&quot;{emptyVariant}&quot;
+                    <br />
+                    &nbsp;&nbsp;size=&quot;{emptySize}&quot;
+                    <br />
+                    &nbsp;&nbsp;rounded=&quot;{emptyRounded}&quot;
+                    <br />
+                    &nbsp;&nbsp;icon=&#123;&lt;CartIcon /&gt;&#125;
+                    <br />
+                    &nbsp;&nbsp;title=&quot;Your campus food tray is empty&quot;
+                    <br />
+                    &nbsp;&nbsp;description=&quot;Explore daily specials from central dining...&quot;
+                    <br />
+                    &nbsp;&nbsp;action=&#123;&lt;Button variant=&quot;primary&quot;&gt;Explore Dining Halls&lt;/Button&gt;&#125;
+                    <br />
+                    <span className="text-primary">/&gt;</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Real-World Food Ordering Scenarios Grid */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World Campus Food Ordering Scenarios</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Production-grade empty states customized for carts, filter results, closed counters, and notifications.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 1. Empty Cart */}
+                <div className="p-6 bg-card border border-border rounded-2xl shadow-2xs flex flex-col justify-between">
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Scenario 1 • Empty Food Tray
+                  </div>
+                  <EmptyState
+                    variant="subtle"
+                    size="sm"
+                    rounded="xl"
+                    icon={<CartIcon />}
+                    badge={<Badge variant="subtle" size="sm">0 items in tray</Badge>}
+                    title="Your food tray is empty"
+                    description="You haven't added any delicious meals or cold drinks yet. Check out student favorites!"
+                    action={<Button variant="primary" size="sm">Start Ordering</Button>}
+                  />
+                </div>
+
+                {/* 2. No Search Results */}
+                <div className="p-6 bg-card border border-border rounded-2xl shadow-2xs flex flex-col justify-between">
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Scenario 2 • Filter / Search Miss
+                  </div>
+                  <EmptyState
+                    variant="dashed"
+                    size="sm"
+                    rounded="xl"
+                    icon={<Search />}
+                    title="No cafeteria dishes found"
+                    description="No meals match your criteria. Try searching for &quot;Burger&quot;, &quot;Salad&quot;, or &quot;Latte&quot;."
+                    action={<Button variant="outline" size="sm">Reset All Filters</Button>}
+                  />
+                </div>
+
+                {/* 3. Station Closed */}
+                <div className="p-6 bg-card border border-border rounded-2xl shadow-2xs flex flex-col justify-between">
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Scenario 3 • Closed Food Station
+                  </div>
+                  <EmptyState
+                    variant="card"
+                    size="sm"
+                    rounded="xl"
+                    icon={<Store />}
+                    badge={<Badge variant="popular" size="sm">Closed until 5 PM</Badge>}
+                    title="Station Closed for Prep"
+                    description="Express Grill is preparing the evening dinner service. Other stalls are currently serving."
+                    action={<Button variant="subtle" size="sm">Find Open Counters</Button>}
+                  />
+                </div>
+
+                {/* 4. No Active Live Orders */}
+                <div className="p-6 bg-card border border-border rounded-2xl shadow-2xs flex flex-col justify-between">
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Scenario 4 • Live Order Tracker
+                  </div>
+                  <EmptyState
+                    variant="default"
+                    size="sm"
+                    rounded="xl"
+                    icon={<Bike />}
+                    badge={<Badge variant="available" size="sm">All orders delivered</Badge>}
+                    title="No active orders"
+                    description="You don't have any ongoing deliveries. When you place an order, live tracking appears here."
+                    action={<Button variant="primary" size="sm">Browse Campus Menus</Button>}
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Visual Variants Showcase */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Visual Variants (4 Styles)</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Consistent tokens: <code className="text-xs font-mono text-primary">default</code> (minimal/transparent), <code className="text-xs font-mono text-primary">subtle</code> (soft brand tint), <code className="text-xs font-mono text-primary">card</code> (solid card), and <code className="text-xs font-mono text-primary">dashed</code> (interactive drop-zone style).
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {(["default", "subtle", "card", "dashed"] as EmptyStateVariant[]).map((v) => (
+                  <div key={v} className="flex flex-col space-y-2">
+                    <span className="text-xs font-semibold text-muted-foreground capitalize">
+                      Variant: {v}
+                    </span>
+                    <EmptyState
+                      variant={v}
+                      size="sm"
+                      rounded="xl"
+                      icon={<Coffee />}
+                      title={`Empty ${v} state`}
+                      description="Clean campusbite styling tokens."
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Size Proportions */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Size Proportions (sm, md, lg)</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Proportionate icon box sizes, typography scale, padding, and vertical spacing.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                {(["sm", "md", "lg"] as EmptyStateSize[]).map((s) => (
+                  <div key={s} className="border border-border rounded-xl p-4 bg-muted/10 space-y-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-primary">
+                      Size: {s}
+                    </span>
+                    <EmptyState
+                      variant="card"
+                      size={s}
+                      rounded="xl"
+                      icon={<Utensils />}
+                      badge={<Badge variant="secondary" size="sm">Size: {s}</Badge>}
+                      title={`Demonstrating ${s.toUpperCase()} Empty State`}
+                      description="Optical icon sizing with scalable SVG container and typography balance."
+                      action={<Button variant="primary" size={s === "lg" ? "md" : "sm"}>Primary Action</Button>}
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Compound Components Pattern */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Compound Component Sub-parts</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  You can also compose custom layouts using <code className="text-xs font-mono text-primary">&lt;EmptyStateIcon&gt;</code>, <code className="text-xs font-mono text-primary">&lt;EmptyStateTitle&gt;</code>, <code className="text-xs font-mono text-primary">&lt;EmptyStateDescription&gt;</code>, and <code className="text-xs font-mono text-primary">&lt;EmptyStateActions&gt;</code>.
+                </p>
+              </div>
+
+              <div className="p-8 bg-primary-subtle/20 border border-primary-200/40 rounded-2xl text-center">
+                <EmptyState variant="default" size="md" rounded="xl">
+                  <EmptyStateIcon size="md">
+                    <Sparkles />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle size="md">
+                    Compound Layout Composition
+                  </EmptyStateTitle>
+                  <EmptyStateDescription size="md">
+                    Gives full control to insert custom badges, countdown timers, search inputs, or multi-button clusters directly inside the empty state.
+                  </EmptyStateDescription>
+                  <EmptyStateActions>
+                    <Button variant="primary" size="sm">Custom Primary</Button>
+                    <Button variant="outline" size="sm">Custom Secondary</Button>
+                  </EmptyStateActions>
+                </EmptyState>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* ======================= SKELETON COMPONENT TAB ======================= */}
+        {activeTab === "skeleton" && (
+          <div className="space-y-10">
+            {/* Interactive Skeleton Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Skeleton Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Skeleton screen placeholders supporting pulse, liquid wave shimmer, configurable border radius, and food-ordering presets.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Animation Style */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Animation Mode (`animation`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["shimmer", "pulse", "none"] as SkeletonAnimation[]).map((a) => (
+                        <button
+                          key={a}
+                          type="button"
+                          onClick={() => setSkeletonAnimation(a)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all capitalize ${
+                            skeletonAnimation === a
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {a} {a === "shimmer" && "✨ (Liquid Wave)"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Corner Radius (`rounded`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "sm", "md", "lg", "xl", "2xl", "full"] as SkeletonRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setSkeletonRounded(r)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            skeletonRounded === r
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Simulate Loading Toggle */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Interactive Simulation
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant={isLoadingContent ? "primary" : "outline"}
+                        onClick={() => setIsLoadingContent((prev) => !prev)}
+                        size="sm"
+                      >
+                        {isLoadingContent ? "Switch to Loaded Content" : "Simulate Loading Skeleton"}
+                      </Button>
+                      <span className="text-xs text-muted-foreground">
+                        Current view: <strong className="text-foreground">{isLoadingContent ? "Skeleton Loading" : "Real Content"}</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Preview Display */}
+                <div className="lg:col-span-5 bg-background/50 border border-border rounded-xl p-6 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+                        Live Preview ({skeletonRounded})
+                      </span>
+                      <Badge variant={isLoadingContent ? "discount" : "available"} size="sm">
+                        {isLoadingContent ? "Loading..." : "Ready"}
+                      </Badge>
+                    </div>
+
+                    {/* Direct Primitive Skeleton Test Row */}
+                    <div className="p-3.5 mb-4 rounded-xl border border-border/70 bg-card space-y-2.5 shadow-2xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-mono font-semibold text-muted-foreground">
+                          Direct Primitive: rounded="{skeletonRounded}"
+                        </span>
+                        <span className="text-[11px] font-mono text-primary font-bold">
+                          {skeletonRounded}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-8 flex-1" rounded={skeletonRounded} animation={skeletonAnimation} />
+                        <Skeleton className="h-8 w-24" rounded={skeletonRounded} animation={skeletonAnimation} />
+                        <Skeleton className="h-8 w-12" rounded={skeletonRounded} animation={skeletonAnimation} />
+                      </div>
+                    </div>
+
+                    {isLoadingContent ? (
+                      <SkeletonFoodCard
+                        animation={skeletonAnimation}
+                        rounded={skeletonRounded}
+                      />
+                    ) : (
+                      <div className="p-5 border border-border/80 bg-card rounded-2xl shadow-xs space-y-4">
+                        <div className="w-full h-36 rounded-xl bg-primary-subtle/50 flex items-center justify-center text-primary text-4xl">
+                          🍔
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-bold text-foreground text-sm">Double Peri-Peri Smash</h4>
+                            <Badge variant="popular" size="sm">Popular</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">Two beef patties, melted cheddar, campus sauce.</p>
+                        </div>
+                        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                          <span className="font-mono font-bold text-primary text-base">$8.20</span>
+                          <Button size="sm" leftIcon={<CartIcon />}>Add to Cart</Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Code snippet */}
+                  <div className="bg-card p-4 rounded-xl border border-border text-xs font-mono text-muted-foreground overflow-x-auto">
+                    <code>
+                      {isLoadingContent
+                        ? `<Skeleton rounded="${skeletonRounded}" animation="${skeletonAnimation}" />\n<SkeletonFoodCard rounded="${skeletonRounded}" animation="${skeletonAnimation}" />`
+                        : `<FoodCard title="Double Peri-Peri" price={8.20} />`}
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Presets Gallery */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Skeleton Helper Presets</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Built-in placeholders for text paragraphs, vendor avatars, action buttons, and food cards.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Preset 1: Text Paragraphs */}
+                <div className="p-5 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    &lt;SkeletonText lines=&#123;4&#125; rounded="{skeletonRounded}" /&gt;
+                  </span>
+                  <div className="space-y-3 pt-2">
+                    <SkeletonText lines={4} rounded={skeletonRounded} animation={skeletonAnimation} />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Multi-line text with an automatically shortened final line for natural paragraph simulation.
+                  </p>
+                </div>
+
+                {/* Preset 2: Avatars & Badges */}
+                <div className="p-5 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    &lt;SkeletonAvatar rounded="{skeletonRounded}" /&gt;
+                  </span>
+                  <div className="flex items-center gap-3 pt-2">
+                    <SkeletonAvatar size="lg" rounded={skeletonRounded} animation={skeletonAnimation} />
+                    <div className="space-y-2 flex-1">
+                      <Skeleton className="h-4 w-3/4" rounded={skeletonRounded} animation={skeletonAnimation} />
+                      <Skeleton className="h-3 w-1/2" rounded={skeletonRounded} animation={skeletonAnimation} />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 pt-2">
+                    <Skeleton className="h-6 w-16" rounded={skeletonRounded} animation={skeletonAnimation} />
+                    <Skeleton className="h-6 w-20" rounded={skeletonRounded} animation={skeletonAnimation} />
+                    <Skeleton className="h-6 w-14" rounded={skeletonRounded} animation={skeletonAnimation} />
+                  </div>
+                </div>
+
+                {/* Preset 3: Buttons & Controls */}
+                <div className="p-5 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    &lt;SkeletonButton rounded="{skeletonRounded}" /&gt;
+                  </span>
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center gap-2">
+                      <SkeletonButton size="sm" rounded={skeletonRounded} animation={skeletonAnimation} />
+                      <SkeletonButton size="sm" rounded={skeletonRounded} animation={skeletonAnimation} className="w-16" />
+                    </div>
+                    <SkeletonButton size="md" className="w-full" rounded={skeletonRounded} animation={skeletonAnimation} />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Button-shaped loading boxes matching size scales (`sm`, `md`, `lg`).
+                  </p>
+                </div>
+              </div>
+
+              {/* Grid of 3 Food Cards */}
+              <div className="pt-4 space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">Food Menu Grid Loading State</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  <SkeletonFoodCard animation={skeletonAnimation} rounded={skeletonRounded} />
+                  <SkeletonFoodCard animation={skeletonAnimation} rounded={skeletonRounded} />
+                  <SkeletonFoodCard animation={skeletonAnimation} rounded={skeletonRounded} />
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* ======================= DRAWER COMPONENT TAB ======================= */}
         {activeTab === "drawer" && (
@@ -2520,7 +3176,7 @@ export default function DesignArchitecturePage() {
                       Border Radius (`rounded`)
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {roundedOptions.map((r) => (
+                      {btnRoundedOptions.map((r) => (
                         <button
                           key={r}
                           type="button"
