@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Primary Colors */
+  /* Brand Primary Colors (#c34e31) */
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-subtle: var(--primary-subtle);
 
@@ -22,6 +23,7 @@
   /* Secondary / Accent */
   --color-secondary: var(--secondary);
   --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-active: var(--secondary-active);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary-subtle: var(--secondary-subtle);
 
@@ -44,6 +46,8 @@
 
   /* Semantic Feedback */
   --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-active: var(--destructive-active);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-subtle: var(--destructive-subtle);
 
@@ -67,12 +71,14 @@
   /* Brand Primary (#c34e31) */
   --primary: #c34e31;
   --primary-hover: #b03f24;
+  --primary-active: #93331b;
   --primary-foreground: #ffffff;
   --primary-subtle: #fbebe6;
 
   /* Secondary / Accent */
   --secondary: #e5732f;
   --secondary-hover: #cc5e1d;
+  --secondary-active: #a84514;
   --secondary-foreground: #ffffff;
   --secondary-subtle: #fff1e8;
 
@@ -95,6 +101,8 @@
 
   /* Feedback States */
   --destructive: #dc2626;
+  --destructive-hover: #b91c1c;
+  --destructive-active: #991b1b;
   --destructive-foreground: #ffffff;
   --destructive-subtle: #fef2f2;
 
