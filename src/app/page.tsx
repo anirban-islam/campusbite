@@ -1,80 +1,77 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
+import { Announcement, Header } from "@/components/layout";
 import { Button } from "@/components/ui";
+import { ArrowRight, Sparkles, Store, Utensils } from "@/lib/icons";
+
+export const instant = true;
 
 export default function Home() {
-  const [loading, setLoading] = useState(false);
-
-  const toggleLoading = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 2000);
-  };
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-background text-foreground">
-      <div className="max-w-2xl w-full mx-auto space-y-8 text-center">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary-200">
-          Campus Food Platform
-        </span>
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Welcome to <span className="text-primary">CampusBite</span>
-        </h1>
-        <p className="text-muted-foreground text-base">
-          Primary brand color <span className="font-semibold text-primary">#c34e31</span> with DM Sans typography.
-        </p>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      {/* Top Announcement Bar */}
+      <Announcement variant="subtle" />
 
-        {/* Variants showcase */}
-        <div className="p-6 rounded-2xl bg-card border border-border shadow-xs text-left space-y-6">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              Button Variants
-            </h2>
-            <div className="flex flex-wrap gap-2.5 items-center">
-              <Button variant="primary">Primary</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="outline">Outline</Button>
-              <Button variant="subtle">Subtle</Button>
-              <Button variant="ghost">Ghost</Button>
-              <Button variant="destructive">Destructive</Button>
-              <Button variant="link">Link</Button>
+      {/* Main Campus Navigation Header */}
+      <Header />
+
+      <main className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12">
+        <div className="max-w-4xl w-full mx-auto space-y-10 text-center">
+          <div className="space-y-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary-200 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5" />
+              Live Campus Food Platform
+            </span>
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
+              Fresh Campus Meals, <br />
+              <span className="text-primary">Delivered Right to Your Dorm.</span>
+            </h1>
+            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
+              Skip long dining hall queues. Use your student meal plan balance for express counter pickup and live dorm hall drop-offs.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Link href="/desigin-architure">
+                <Button variant="primary" size="lg" rounded="xl" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                  Explore Design Architecture System
+                </Button>
+              </Link>
             </div>
           </div>
 
-          {/* Sizes showcase */}
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              Button Sizes
-            </h2>
-            <div className="flex flex-wrap gap-2.5 items-center">
-              <Button size="sm">Small</Button>
-              <Button size="md">Medium (Default)</Button>
-              <Button size="lg">Large</Button>
+          {/* Quick Action Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+            <div className="p-5 rounded-2xl bg-card border border-border shadow-xs space-y-2">
+              <div className="h-9 w-9 rounded-xl bg-primary-subtle text-primary flex items-center justify-center">
+                <Utensils className="w-4.5 h-4.5" />
+              </div>
+              <h3 className="font-bold text-sm text-foreground">5 Campus Dining Stations</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Central Dining, Student Union Grill, Night Wok, Campus Cafe, and Green Salad Bar.
+              </p>
             </div>
-          </div>
 
-          {/* Loading state showcase */}
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              Loading State
-            </h2>
-            <div className="flex flex-wrap gap-2.5 items-center">
-              <Button
-                variant="primary"
-                isLoading={loading}
-                loadingText="Placing Order..."
-                onClick={toggleLoading}
-              >
-                Click to Test Loading
-              </Button>
-              <Button variant="secondary" isLoading>
-                Loading
-              </Button>
-              <Button variant="outline" isLoading loadingText="Saving..." />
+            <div className="p-5 rounded-2xl bg-card border border-border shadow-xs space-y-2">
+              <div className="h-9 w-9 rounded-xl bg-secondary-subtle text-secondary flex items-center justify-center">
+                <Store className="w-4.5 h-4.5" />
+              </div>
+              <h3 className="font-bold text-sm text-foreground">Express Counter Pickup</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Order ahead on mobile and grab your boxed meals with a quick barcode scan.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-card border border-border shadow-xs space-y-2">
+              <div className="h-9 w-9 rounded-xl bg-primary-subtle text-primary flex items-center justify-center">
+                <Sparkles className="w-4.5 h-4.5" />
+              </div>
+              <h3 className="font-bold text-sm text-foreground">Student ID Smart Pay</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Deduct directly from your semester dining credits or credit card with 5% campus rebate.
+              </p>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
