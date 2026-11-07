@@ -60,12 +60,15 @@ export const ChevronLeft = ChevronLeftIcon;
 /** Arrow Right */
 export const ArrowRightIcon = createIcon(
   "ArrowRightIcon",
-  <>
-    <path d="M5 12h14" />
-    <path d="m12 5 7 7-7 7" />
-  </>
+  <path
+    d="M13.75 4.5C13.75 7.48733 16.7351 10.7868 21.3027 10.9902L21.75 11V13C16.931 13 13.75 16.4162 13.75 19.5H11.75C11.75 16.9994 13.1355 14.6064 15.3682 13H2.25V11H15.3682C13.1355 9.39361 11.75 7.00061 11.75 4.5H13.75Z"
+    fill="currentColor"
+    stroke="none"
+  />
 );
 export const ArrowRight = ArrowRightIcon;
+export const ArrowIcon = ArrowRightIcon;
+export const Arrow = ArrowRightIcon;
 
 /** Arrow Left */
 export const ArrowLeftIcon = createIcon(

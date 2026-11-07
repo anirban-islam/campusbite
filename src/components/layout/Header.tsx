@@ -253,23 +253,17 @@ export function Header({ className, activeNav = "dining" }: HeaderProps) {
                3. Right: User Profile FIRST, then Cart Icon (Balanced Size & Gap)
                ============================================================= */}
             <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-              {/* User Profile Avatar / Sign In (Compact & rounded-sm) */}
-              <button
-                type="button"
-                onClick={() =>
-                  toast.info("Logged in as Alex Rivera", {
-                    description: "Student ID: #CB-20491 • Dorm Hall West",
-                    rounded: "sm",
-                  })
-                }
-                aria-label="Student Account"
+              {/* User Profile Avatar / Sign In (Links to /login) */}
+              <Link
+                href="/login"
+                aria-label="Student Sign In"
                 className={cn(
                   "h-9 w-9 sm:h-9.5 sm:w-9.5 rounded-sm border border-border bg-card flex items-center justify-center shrink-0",
                   "text-foreground hover:bg-muted hover:border-primary/50 transition-all cursor-pointer shadow-2xs group",
                 )}
               >
                 <User className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-foreground group-hover:text-primary transition-colors" />
-              </button>
+              </Link>
 
               {/* Shopping Food Tray Cart Button (Compact & rounded-sm, Shopping Cart Icon) */}
               <button

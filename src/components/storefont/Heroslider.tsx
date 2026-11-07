@@ -79,11 +79,6 @@ const defaultSlides: HeroSlide[] = [
         value: "9 AM - 5 AM",
         icon: <Flame className="w-4 h-4 text-orange-400" />,
       },
-      {
-        label: "Dorm Drop-off",
-        value: "West & North Halls",
-        icon: <Bike className="w-4 h-4 text-emerald-400" />,
-      },
     ],
   },
   {
@@ -118,11 +113,6 @@ const defaultSlides: HeroSlide[] = [
         value: "5 Dining Stations",
         icon: <Store className="w-4 h-4 text-primary" />,
       },
-      {
-        label: "Payment",
-        value: "Instant Tap & Pay",
-        icon: <Check className="w-4 h-4 text-emerald-400" />,
-      },
     ],
   },
   {
@@ -156,11 +146,6 @@ const defaultSlides: HeroSlide[] = [
         label: "Express Pickup",
         value: "Skip The Queue",
         icon: <Store className="w-4 h-4 text-emerald-400" />,
-      },
-      {
-        label: "Kitchen Schedule",
-        value: "Cooked Fresh Daily",
-        icon: <Clock className="w-4 h-4 text-orange-400" />,
       },
     ],
   },
@@ -238,8 +223,8 @@ export function Heroslider({
       onTouchEnd={handleTouchEnd}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Slider Card Container: FIXED HEIGHT (no height changes between slides) & NO BORDER */}
-        <div className="relative overflow-hidden rounded-sm bg-neutral-950 shadow-md h-[440px] sm:h-[480px] lg:h-[500px] flex items-center justify-center">
+        {/* Slider Card Container: FIXED HEIGHT & NO BORDER */}
+        <div className="group relative overflow-hidden rounded-sm bg-neutral-950 shadow-md h-[440px] sm:h-[480px] lg:h-[500px] flex items-center justify-center">
           {/* Background Images Layer with smooth cross-fade */}
           {slides.map((slide, index) => (
             <div
@@ -331,9 +316,9 @@ export function Heroslider({
               )}
             </div>
 
-            {/* 5. Bottom Icon + Text */}
+            {/* 5. Bottom Icon + Text (Two Only) */}
             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 pt-3 sm:pt-4 border-t border-white/15 w-full">
-              {activeSlide.stats.map((stat, idx) => (
+              {activeSlide.stats.slice(0, 2).map((stat, idx) => (
                 <div key={idx} className="flex items-center gap-2 text-white">
                   <div className="h-7 w-7 rounded-sm bg-white/10 border border-white/10 flex items-center justify-center shrink-0 text-white backdrop-blur-xs">
                     {stat.icon}
@@ -349,22 +334,22 @@ export function Heroslider({
             </div>
           </div>
 
-          {/* Left Arrow Button */}
+          {/* Left Arrow Button (Visible Only On Hover) */}
           <button
             type="button"
             onClick={prevSlide}
             aria-label="Previous slide"
-            className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 h-9 w-9 sm:h-10 sm:w-10 rounded-sm border border-white/20 bg-neutral-900/70 hover:bg-neutral-800/90 active:scale-95 text-white flex items-center justify-center transition-all cursor-pointer shadow-md backdrop-blur-xs"
+            className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 h-9 w-9 sm:h-10 sm:w-10 rounded-sm border border-white/20 bg-neutral-900/70 hover:bg-neutral-800/90 active:scale-95 text-white flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md backdrop-blur-xs opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 pointer-events-none group-hover:pointer-events-auto"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          {/* Right Arrow Button */}
+          {/* Right Arrow Button (Visible Only On Hover) */}
           <button
             type="button"
             onClick={nextSlide}
             aria-label="Next slide"
-            className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 h-9 w-9 sm:h-10 sm:w-10 rounded-sm border border-white/20 bg-neutral-900/70 hover:bg-neutral-800/90 active:scale-95 text-white flex items-center justify-center transition-all cursor-pointer shadow-md backdrop-blur-xs"
+            className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 h-9 w-9 sm:h-10 sm:w-10 rounded-sm border border-white/20 bg-neutral-900/70 hover:bg-neutral-800/90 active:scale-95 text-white flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md backdrop-blur-xs opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 pointer-events-none group-hover:pointer-events-auto"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
