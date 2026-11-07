@@ -28,7 +28,7 @@ export default function LoginPage() {
     const newErrors: { email?: string; password?: string } = {};
 
     if (!email.trim()) {
-      newErrors.email = "Please enter your student email";
+      newErrors.email = "Please enter your email address";
     } else if (!email.includes("@")) {
       newErrors.email = "Please enter a valid email address";
     }
@@ -50,7 +50,7 @@ export default function LoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       toast.success("Welcome back!", {
-        description: `Signed in as ${email}. Connected to Campus Smart Pay.`,
+        description: `Signed in as ${email}. Welcome to CampusBite.`,
         rounded: "sm",
       });
       router.push("/");
@@ -77,7 +77,7 @@ export default function LoginPage() {
               <div className="inline-flex items-center gap-1.5 pt-1">
                 <Badge variant="available" size="sm" rounded="sm">
                   <GraduationCap className="w-3.5 h-3.5 mr-1" />
-                  Student Dining Portal
+                  Campus Dining Portal
                 </Badge>
               </div>
 
@@ -85,8 +85,8 @@ export default function LoginPage() {
                 Welcome to Campus<span className="text-primary">Bite</span>
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Sign in with your student credentials to order food and access
-                your meal plan balance.
+                Sign in with your campus credentials to order food and access
+                dining services.
               </p>
             </div>
 
@@ -96,8 +96,8 @@ export default function LoginPage() {
               <div className="space-y-1">
                 <Input
                   type="email"
-                  label="Student Email"
-                  placeholder="student@campus.edu"
+                  label="Email Address"
+                  placeholder="name@campus.edu"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);

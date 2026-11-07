@@ -37,7 +37,7 @@ export default function RegisterPage() {
     }
 
     if (!email.trim()) {
-      newErrors.email = "Please enter your student email";
+      newErrors.email = "Please enter your email address";
     } else if (!email.includes("@")) {
       newErrors.email = "Please enter a valid email address";
     }
@@ -85,7 +85,7 @@ export default function RegisterPage() {
               <div className="inline-flex items-center gap-1.5 pt-1">
                 <Badge variant="available" size="sm" rounded="sm">
                   <GraduationCap className="w-3.5 h-3.5 mr-1" />
-                  New Student Registration
+                  New Account Registration
                 </Badge>
               </div>
 
@@ -93,7 +93,7 @@ export default function RegisterPage() {
                 Create an Account
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Join CampusBite to order cafeteria meals, study snacks, and late-night food.
+                Join CampusBite to order cafeteria meals, snacks, and dining deliveries.
               </p>
             </div>
 
@@ -119,8 +119,8 @@ export default function RegisterPage() {
 
               <Input
                 type="email"
-                label="Student Email"
-                placeholder="student@campus.edu"
+                label="Email Address"
+                placeholder="name@campus.edu"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
