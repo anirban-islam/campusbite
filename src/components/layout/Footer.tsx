@@ -45,13 +45,13 @@ export function Footer({ className }: FooterProps) {
   return (
     <footer
       className={cn(
-        "w-full bg-card text-foreground transition-colors",
+        "w-full bg-card border-t border-border/80 text-foreground transition-colors",
         className,
       )}
     >
       {/* Upper Information Bar */}
       <div className="w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-b border-border/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-b border-border/70">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="flex items-center gap-3">
               <div className="h-11 w-11 rounded-sm bg-primary-subtle text-primary flex items-center justify-center shrink-0">
