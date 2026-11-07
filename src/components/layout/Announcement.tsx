@@ -21,7 +21,7 @@ export function Announcement({
 
   if (!isVisible) return null;
 
-  const promoCode = "CAMPUS15";
+  const promoCode = "CAMPUS150";
 
   const handleCopyCode = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -68,7 +68,10 @@ export function Announcement({
         {/* Center: Main Announcement with BDT Taka Symbol (৳) & Copyable Promo Code */}
         <div className="flex-1 flex items-center justify-center gap-2 sm:gap-2.5 text-center min-w-0">
           <div className="inline-flex items-center gap-1.5 sm:gap-2 min-w-0">
-            <span className="shrink-0 inline-flex items-center justify-center text-primary" aria-hidden="true">
+            <span
+              className="shrink-0 inline-flex items-center justify-center text-primary"
+              aria-hidden="true"
+            >
               {variant === "brand" ? (
                 <Sparkles className="w-4 h-4 text-secondary" />
               ) : (
@@ -77,8 +80,10 @@ export function Announcement({
             </span>
 
             <p className="font-semibold text-xs sm:text-sm md:text-[15px] leading-tight">
-              <span className="hidden sm:inline font-bold">Late Night Study Fuel: </span>
-              <span>Free Dorm Delivery on orders over ৳15 with code</span>
+              <span className="hidden sm:inline font-bold">
+                Late Night Study Fuel:{" "}
+              </span>
+              <span>Free Delivery on orders over ৳150 with code</span>
             </p>
           </div>
 

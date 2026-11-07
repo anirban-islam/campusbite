@@ -23,7 +23,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { email?: string; password?: string } = {};
 
@@ -47,14 +47,31 @@ export default function LoginPage() {
     setErrors({});
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        toast.error(data.error || "Invalid email or password", { rounded: "sm" });
+        setIsLoading(false);
+        return;
+      }
+
       toast.success("Welcome back!", {
-        description: `Signed in as ${email}. Welcome to CampusBite.`,
+        description: `Signed in as ${data.user.firstName} (${data.user.role}).`,
         rounded: "sm",
       });
-      router.push("/");
-    }, 800);
+
+      router.push(data.redirectTo || "/account");
+    } catch {
+      toast.error("Network error. Please try again.", { rounded: "sm" });
+      setIsLoading(false);
+    }
   };
 
   return (
