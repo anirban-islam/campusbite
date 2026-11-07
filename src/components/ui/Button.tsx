@@ -1,5 +1,7 @@
 import React, { forwardRef } from "react";
 import { cn } from "@/lib/utils";
+import { useDialog, DialogRounded } from "./Dialog";
+import { useDrawer } from "./Drawer";
 
 export type ButtonVariant =
   | "primary"
@@ -67,6 +69,17 @@ const defaultRoundedBySize: Record<ButtonSize, ButtonRounded> = {
   "icon-sm": "md",
 };
 
+const dialogRoundedToButtonRounded: Record<DialogRounded, ButtonRounded> = {
+  none: "none",
+  sm: "sm",
+  md: "md",
+  lg: "lg",
+  xl: "xl",
+  "2xl": "lg",
+  "3xl": "xl",
+  full: "full",
+};
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -85,9 +98,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    const dialog = useDialog();
+    const drawer = useDrawer();
     const isIconOnly = size === "icon" || size === "icon-sm";
     const isDisabled = disabled || isLoading;
-    const resolvedRounded = roundedStyles[rounded ?? defaultRoundedBySize[size]];
+
+    // Automatically inherit rounded style from parent Dialog or Drawer
+    const activeOverlayRounded = dialog?.rounded ?? drawer?.rounded;
+    const inheritedRounded = activeOverlayRounded
+      ? dialogRoundedToButtonRounded[activeOverlayRounded]
+      : undefined;
+
+    const resolvedRounded =
+      roundedStyles[rounded ?? inheritedRounded ?? defaultRoundedBySize[size]];
 
     return (
       <button

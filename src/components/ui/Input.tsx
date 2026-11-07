@@ -1,5 +1,6 @@
 import React, { forwardRef, useId } from "react";
 import { cn } from "@/lib/utils";
+import { useDialog, DialogRounded } from "./Dialog";
 
 export type InputVariant = "outline" | "filled" | "subtle";
 export type InputSize = "sm" | "md" | "lg";
@@ -59,6 +60,17 @@ const roundedStyles: Record<InputRounded, string> = {
   full: "rounded-full",
 };
 
+const dialogRoundedToInputRounded: Record<DialogRounded, InputRounded> = {
+  none: "none",
+  sm: "sm",
+  md: "md",
+  lg: "lg",
+  xl: "xl",
+  "2xl": "lg",
+  "3xl": "xl",
+  full: "full",
+};
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
@@ -70,7 +82,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       success,
       variant = "outline",
       inputSize = "md",
-      rounded = "lg",
+      rounded,
       leftIcon,
       rightIcon,
       disabled,
@@ -82,10 +94,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    const dialog = useDialog();
     const generatedId = useId();
     const inputId = id || generatedId;
     const hasError = Boolean(error);
     const sizeConfig = sizeStyles[inputSize];
+
+    const inheritedRounded = dialog?.rounded
+      ? dialogRoundedToInputRounded[dialog.rounded]
+      : undefined;
+
+    const resolvedRounded =
+      roundedStyles[rounded ?? inheritedRounded ?? "lg"];
 
     return (
       <div className={cn("w-full space-y-1.5 text-left", containerClassName)}>
@@ -127,7 +147,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "transition-all duration-150 outline-none select-text",
               "disabled:opacity-50 disabled:bg-muted disabled:cursor-not-allowed",
               variantStyles[variant],
-              roundedStyles[rounded],
+              resolvedRounded,
               sizeConfig.input,
               Boolean(leftIcon) && sizeConfig.leftPadding,
               Boolean(rightIcon || hasError || success) && sizeConfig.rightPadding,

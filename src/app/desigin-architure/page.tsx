@@ -32,6 +32,29 @@ import {
   RadioSize,
   RadioVariant,
   RadioOrientation,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+  DialogFooter,
+  DialogClose,
+  DialogSize,
+  DialogRounded,
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerBody,
+  DrawerFooter,
+  DrawerClose,
+  DrawerDirection,
+  DrawerSize,
+  DrawerRounded,
 } from "@/components/ui";
 import {
   CartIcon,
@@ -54,7 +77,22 @@ import {
 } from "@/lib/icons";
 
 export default function DesignArchitecturePage() {
-  const [activeTab, setActiveTab] = useState<"radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("radiogroup");
+  const [activeTab, setActiveTab] = useState<"drawer" | "dialog" | "radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("drawer");
+
+  // Drawer Playground State
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerDirection, setDrawerDirection] = useState<DrawerDirection>("right");
+  const [drawerSize, setDrawerSize] = useState<DrawerSize>("md");
+  const [drawerRounded, setDrawerRounded] = useState<DrawerRounded>("2xl");
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
+
+  // Dialog Playground State
+  const [dialogSize, setDialogSize] = useState<DialogSize>("md");
+  const [dialogRounded, setDialogRounded] = useState<DialogRounded>("2xl");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [orderDialogOpen, setOrderDialogOpen] = useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
   // RadioGroup Playground State
   const [radioSize, setRadioSize] = useState<RadioSize>("md");
@@ -192,6 +230,26 @@ export default function DesignArchitecturePage() {
           {/* Navigation Tabs */}
           <div className="flex flex-wrap gap-2 pt-2">
             <button
+              onClick={() => setActiveTab("drawer")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "drawer"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Drawer Component
+            </button>
+            <button
+              onClick={() => setActiveTab("dialog")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "dialog"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Dialog Component
+            </button>
+            <button
               onClick={() => setActiveTab("radiogroup")}
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                 activeTab === "radiogroup"
@@ -263,6 +321,606 @@ export default function DesignArchitecturePage() {
             </button>
           </div>
         </header>
+
+        {/* ======================= DRAWER COMPONENT TAB ======================= */}
+        {activeTab === "drawer" && (
+          <div className="space-y-10">
+            {/* Interactive Drawer Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Drawer Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Multi-directional slide-over panel supporting right cart drawers, mobile bottom sheets with grab handles, left navigation, and top banners.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Direction */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Slide Direction (`direction`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["right", "bottom", "left", "top"] as DrawerDirection[]).map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setDrawerDirection(d)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all capitalize ${
+                            drawerDirection === d
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {d}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Drawer Size (`size`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["sm", "md", "lg", "xl", "full"] as DrawerSize[]).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setDrawerSize(s)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all uppercase ${
+                            drawerSize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Corner Radius (`rounded`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "sm", "md", "lg", "xl", "2xl", "3xl", "full"] as DrawerRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setDrawerRounded(r)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            drawerRounded === r
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Trigger Controls
+                    </label>
+                    <div className="flex flex-wrap gap-3">
+                      <Button onClick={() => setDrawerOpen(true)} leftIcon={<CartIcon />}>
+                        Open {drawerDirection.toUpperCase()} Drawer ({drawerRounded})
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Preview Display */}
+                <div className="lg:col-span-5 bg-background/50 border border-border rounded-xl p-6 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+                        Drawer Status
+                      </span>
+                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-muted text-foreground">
+                        State: <strong className={drawerOpen ? "text-primary" : "text-muted-foreground"}>{drawerOpen ? "OPEN" : "CLOSED"}</strong>
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Slide-over panel rendered into <code className="font-mono text-foreground">document.body</code> portal. Features smooth entrance transitions, scroll locking with anti-vibration padding, and inherited button corner curvature.
+                    </p>
+                  </div>
+
+                  {/* Code snippet */}
+                  <div className="bg-card p-4 rounded-xl border border-border text-xs font-mono text-muted-foreground overflow-x-auto">
+                    <code>
+                      {`<Drawer direction="${drawerDirection}" size="${drawerSize}" rounded="${drawerRounded}">\n  <DrawerTrigger>Open Drawer</DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Subtitle</DrawerDescription>\n    </DrawerHeader>\n    <DrawerBody>Content</DrawerBody>\n    <DrawerFooter>\n      <DrawerClose>Close</DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>`}
+                    </code>
+                  </div>
+                </div>
+              </div>
+
+              {/* Standard Controlled Drawer Instance */}
+              <Drawer
+                open={drawerOpen}
+                onOpenChange={setDrawerOpen}
+                direction={drawerDirection}
+                size={drawerSize}
+                rounded={drawerRounded}
+              >
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>Campus Dining Customizer</DrawerTitle>
+                    <DrawerDescription>
+                      Adjust your order preferences, dietary accommodations, and delivery instructions.
+                    </DrawerDescription>
+                  </DrawerHeader>
+
+                  <DrawerBody className="space-y-4">
+                    <div className="p-4 rounded-xl bg-primary-subtle text-primary border border-primary/20 space-y-1.5 text-xs">
+                      <div className="font-bold flex items-center gap-1.5">
+                        <Flame className="w-4 h-4" /> Live Kitchen Station Notice
+                      </div>
+                      <p className="text-primary/90">
+                        Peak lunch hour in progress. Orders placed now have an estimated wait time of 8-12 minutes.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-foreground">Meal Customization Notes</label>
+                      <Textarea
+                        placeholder="e.g. No jalapeños, extra house sauce on the side..."
+                        rows={3}
+                      />
+                    </div>
+                  </DrawerBody>
+
+                  <DrawerFooter>
+                    <Button variant="outline" onClick={() => setDrawerOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={() => setDrawerOpen(false)} leftIcon={<Check />}>
+                      Save Preferences
+                    </Button>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
+            </section>
+
+            {/* Real World Food Ordering Drawer Scenarios */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World CampusBite Drawers</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Everyday food ordering interfaces: Right Slide-Over Cart and Mobile Filter Bottom Sheet.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Scenario 1: Cart Slide-Over (Right Drawer) */}
+                <div className="p-6 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-foreground">1. Campus Cart Slide-Over</h3>
+                    <Badge variant="popular" size="sm">Right Drawer</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Interactive side drawer displaying ordered food items, quantity controls, and checkout summary.
+                  </p>
+
+                  <Button onClick={() => setCartDrawerOpen(true)} leftIcon={<CartIcon />}>
+                    View Active Cart (3 items)
+                  </Button>
+
+                  <Drawer
+                    open={cartDrawerOpen}
+                    onOpenChange={setCartDrawerOpen}
+                    direction="right"
+                    size="md"
+                    rounded="2xl"
+                  >
+                    <DrawerContent>
+                      <DrawerHeader>
+                        <div className="flex items-center justify-between">
+                          <DrawerTitle>Your Order Cart</DrawerTitle>
+                          <Badge variant="popular" size="sm">3 Items</Badge>
+                        </div>
+                        <DrawerDescription>
+                          Central Dining Hall, Counter #4 Pickup
+                        </DrawerDescription>
+                      </DrawerHeader>
+
+                      <DrawerBody className="space-y-4">
+                        {/* Cart Item 1 */}
+                        <div className="p-3.5 rounded-xl bg-card border border-border space-y-2">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-bold text-foreground text-sm">Double Peri-Peri Smash Burger</h4>
+                              <p className="text-xs text-muted-foreground">Extra campus sauce, medium fries</p>
+                            </div>
+                            <span className="font-mono font-bold text-primary text-sm">$8.20</span>
+                          </div>
+                        </div>
+
+                        {/* Cart Item 2 */}
+                        <div className="p-3.5 rounded-xl bg-card border border-border space-y-2">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-bold text-foreground text-sm">Iced Caramel Cinnamon Brew</h4>
+                              <p className="text-xs text-muted-foreground">Oat milk, 50% sugar</p>
+                            </div>
+                            <span className="font-mono font-bold text-primary text-sm">$4.20</span>
+                          </div>
+                        </div>
+
+                        {/* Cart Item 3 */}
+                        <div className="p-3.5 rounded-xl bg-card border border-border space-y-2">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-bold text-foreground text-sm">Warm Fresh Cookie</h4>
+                              <p className="text-xs text-muted-foreground">Triple chocolate chip</p>
+                            </div>
+                            <span className="font-mono font-bold text-primary text-sm">$2.30</span>
+                          </div>
+                        </div>
+                      </DrawerBody>
+
+                      <DrawerFooter className="flex-col !items-stretch">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-semibold text-foreground text-sm">Subtotal</span>
+                          <span className="font-mono font-bold text-primary text-base">$14.70</span>
+                        </div>
+                        <Button onClick={() => setCartDrawerOpen(false)} leftIcon={<ArrowRight />}>
+                          Proceed to Payment ($14.70)
+                        </Button>
+                      </DrawerFooter>
+                    </DrawerContent>
+                  </Drawer>
+                </div>
+
+                {/* Scenario 2: Mobile Filter Bottom Sheet (Bottom Drawer) */}
+                <div className="p-6 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-foreground">2. Dietary Filter Bottom Sheet</h3>
+                    <Badge variant="available" size="sm">Bottom Sheet</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Mobile-optimized bottom sheet with grab handle pill for filtering cafeteria stations and diets.
+                  </p>
+
+                  <Button variant="outline" onClick={() => setBottomSheetOpen(true)}>
+                    Open Filter Bottom Sheet
+                  </Button>
+
+                  <Drawer
+                    open={bottomSheetOpen}
+                    onOpenChange={setBottomSheetOpen}
+                    direction="bottom"
+                    size="md"
+                    rounded="3xl"
+                  >
+                    <DrawerContent>
+                      <DrawerHeader>
+                        <DrawerTitle>Filter Food Stations & Diets</DrawerTitle>
+                        <DrawerDescription>
+                          Show cafeteria menus matching your nutritional preferences.
+                        </DrawerDescription>
+                      </DrawerHeader>
+
+                      <DrawerBody className="space-y-4">
+                        <div className="space-y-2.5">
+                          <label className="text-xs font-semibold text-foreground uppercase tracking-wider block">
+                            Dietary Accommodations
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <Checkbox label="Vegetarian & Vegan" defaultChecked />
+                            <Checkbox label="Halal Certified Counter" defaultChecked />
+                            <Checkbox label="Gluten-Friendly Kitchen" />
+                            <Checkbox label="Nut-Free Facility" />
+                          </div>
+                        </div>
+                      </DrawerBody>
+
+                      <DrawerFooter>
+                        <Button variant="outline" onClick={() => setBottomSheetOpen(false)}>
+                          Reset Filters
+                        </Button>
+                        <Button onClick={() => setBottomSheetOpen(false)}>
+                          Apply Filters
+                        </Button>
+                      </DrawerFooter>
+                    </DrawerContent>
+                  </Drawer>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* ======================= DIALOG COMPONENT TAB ======================= */}
+        {activeTab === "dialog" && (
+          <div className="space-y-10">
+            {/* Interactive Dialog Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive Dialog Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Modal dialog overlay with scroll lock, backdrop blur, keyboard escape listener, and compound components.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Size */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Modal Width (`size`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["sm", "md", "lg", "xl", "full"] as DialogSize[]).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setDialogSize(s)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all uppercase ${
+                            dialogSize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Rounded */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Corner Radius (`rounded`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["none", "sm", "md", "lg", "xl", "2xl", "3xl", "full"] as DialogRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setDialogRounded(r)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            dialogRounded === r
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Trigger Controls
+                    </label>
+                    <div className="flex flex-wrap gap-3">
+                      <Button onClick={() => setDialogOpen(true)} leftIcon={<Utensils />}>
+                        Open {dialogSize.toUpperCase()} Dialog ({dialogRounded})
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Preview Display */}
+                <div className="lg:col-span-5 bg-background/50 border border-border rounded-xl p-6 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+                        Modal Status
+                      </span>
+                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-muted text-foreground">
+                        State: <strong className={dialogOpen ? "text-primary" : "text-muted-foreground"}>{dialogOpen ? "OPEN" : "CLOSED"}</strong>
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Click the button above to trigger the dialog. It handles smooth portal rendering to <code className="font-mono text-foreground">document.body</code>, traps keyboard focus, and locks background scrolling without layout vibration/shift.
+                    </p>
+                  </div>
+
+                  {/* Code snippet */}
+                  <div className="bg-card p-4 rounded-xl border border-border text-xs font-mono text-muted-foreground overflow-x-auto">
+                    <code>
+                      {`<Dialog size="${dialogSize}" rounded="${dialogRounded}">\n  <DialogTrigger>Open</DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Title</DialogTitle>\n      <DialogDescription>Text</DialogDescription>\n    </DialogHeader>\n    <DialogBody>Content</DialogBody>\n    <DialogFooter>\n      <DialogClose>Cancel</DialogClose>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>`}
+                    </code>
+                  </div>
+                </div>
+              </div>
+
+              {/* Standard Controlled Dialog Instance */}
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen} size={dialogSize} rounded={dialogRounded}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Campus Dining Hall Notice</DialogTitle>
+                    <DialogDescription>
+                      Important schedule adjustments for finals week dinner services.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DialogBody className="space-y-3">
+                    <p>
+                      Central Dining Hall and Student Union Food Court will operate on extended hours throughout the upcoming finals week (Nov 15 – Nov 22).
+                    </p>
+                    <div className="p-3.5 rounded-xl bg-primary-subtle text-primary border border-primary/20 text-xs space-y-1">
+                      <div className="font-bold flex items-center gap-1.5">
+                        <Clock className="w-4 h-4" /> Late Night Breakfast Counter
+                      </div>
+                      <p className="text-primary/90">
+                        Pancakes, coffee, and grilled wraps served until 2:00 AM daily with student ID.
+                      </p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Mobile orders placed via CampusBite will receive priority counter preparation.
+                    </p>
+                  </DialogBody>
+
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                      Dismiss
+                    </Button>
+                    <Button onClick={() => setDialogOpen(false)}>
+                      Understood
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </section>
+
+            {/* Food Ordering Real-World Dialog Scenarios */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World CampusBite Dialogs</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Production modal flows for order checkout confirmations, meal customizations, and cancellations.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Scenario 1: Order Checkout Confirmation Modal */}
+                <div className="p-6 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-foreground">1. Order Checkout Summary</h3>
+                    <Badge variant="popular" size="sm">Cart Flow</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Review items, delivery destination, payment deduction, and total before sending to kitchen.
+                  </p>
+
+                  <Button onClick={() => setOrderDialogOpen(true)} leftIcon={<CartIcon />}>
+                    Review & Confirm Order ($14.70)
+                  </Button>
+
+                  <Dialog open={orderDialogOpen} onOpenChange={setOrderDialogOpen} size="md">
+                    <DialogContent>
+                      <DialogHeader>
+                        <div className="flex items-center gap-2">
+                          <DialogTitle>Confirm Your Order</DialogTitle>
+                          <Badge variant="popular" size="sm">Counter #4</Badge>
+                        </div>
+                        <DialogDescription>
+                          Review your items before dispatching order to Central Dining Hall kitchen.
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <DialogBody className="space-y-4">
+                        {/* Order Items */}
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between text-xs py-1.5 border-b border-border/60">
+                            <div>
+                              <span className="font-semibold text-foreground">1x Double Peri-Peri Smash Burger</span>
+                              <p className="text-muted-foreground text-[11px]">Extra crispy fries, campus sauce</p>
+                            </div>
+                            <span className="font-mono font-bold text-foreground">$8.20</span>
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs py-1.5 border-b border-border/60">
+                            <div>
+                              <span className="font-semibold text-foreground">1x Iced Caramel Cinnamon Brew</span>
+                              <p className="text-muted-foreground text-[11px]">Oat milk, 50% sweetness</p>
+                            </div>
+                            <span className="font-mono font-bold text-foreground">$4.20</span>
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs py-1.5 border-b border-border/60">
+                            <div>
+                              <span className="font-semibold text-foreground">1x Fresh Baked Chocolate Cookie</span>
+                              <p className="text-muted-foreground text-[11px]">Warm counter pickup</p>
+                            </div>
+                            <span className="font-mono font-bold text-foreground">$2.30</span>
+                          </div>
+                        </div>
+
+                        {/* Delivery & Payment Info */}
+                        <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-muted/40 text-xs">
+                          <div>
+                            <span className="text-muted-foreground block text-[11px]">Fulfillment:</span>
+                            <span className="font-semibold text-foreground flex items-center gap-1 mt-0.5">
+                              <Store className="w-3.5 h-3.5 text-primary" /> Express Pickup
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground block text-[11px]">Payment Method:</span>
+                            <span className="font-semibold text-foreground flex items-center gap-1 mt-0.5">
+                              <CreditCard className="w-3.5 h-3.5 text-primary" /> Student ID Pay
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Total Summary */}
+                        <div className="flex items-center justify-between pt-2 border-t border-border">
+                          <span className="font-bold text-foreground">Total Charged:</span>
+                          <span className="text-base font-bold text-primary font-mono">$14.70</span>
+                        </div>
+                      </DialogBody>
+
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setOrderDialogOpen(false)}>
+                          Modify Order
+                        </Button>
+                        <Button onClick={() => setOrderDialogOpen(false)} leftIcon={<Check />}>
+                          Place Order Now
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                {/* Scenario 2: Cancel Order Destructive Alert */}
+                <div className="p-6 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-foreground">2. Destructive Action Alert</h3>
+                    <Badge variant="destructive" size="sm">Warning</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Confirmation modal before cancelling an order in progress or discarding cafeteria cart.
+                  </p>
+
+                  <Button variant="destructive" onClick={() => setCancelDialogOpen(true)}>
+                    Cancel Active Order #CB-8924
+                  </Button>
+
+                  <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen} size="sm">
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle className="text-destructive">Cancel Order?</DialogTitle>
+                        <DialogDescription>
+                          This action will notify the campus kitchen to halt meal preparation.
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <DialogBody className="space-y-3">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Are you sure you want to cancel order <strong className="text-foreground font-semibold">#CB-8924</strong>? If the kitchen has already begun grilling, cancellation fees may apply to your student card account.
+                        </p>
+                      </DialogBody>
+
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
+                          Keep Order
+                        </Button>
+                        <Button variant="destructive" onClick={() => setCancelDialogOpen(false)}>
+                          Yes, Cancel Order
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* ======================= RADIO GROUP COMPONENT TAB ======================= */}
         {activeTab === "radiogroup" && (
