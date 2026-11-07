@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Announcement, Header } from "@/components/layout";
+import { Announcement, Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui";
 import { ArrowRight, Sparkles, Store, Utensils } from "@/lib/icons";
 
@@ -31,7 +31,7 @@ export default function Home() {
 
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <Link href="/desigin-architure">
-                <Button variant="primary" size="lg" rounded="xl" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                <Button variant="primary" size="lg" rounded="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
                   Explore Design Architecture System
                 </Button>
               </Link>
@@ -40,8 +40,8 @@ export default function Home() {
 
           {/* Quick Action Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-            <div className="p-5 rounded-2xl bg-card border border-border shadow-xs space-y-2">
-              <div className="h-9 w-9 rounded-xl bg-primary-subtle text-primary flex items-center justify-center">
+            <div className="p-5 rounded-sm bg-card border border-border shadow-xs space-y-2">
+              <div className="h-9 w-9 rounded-sm bg-primary-subtle text-primary flex items-center justify-center">
                 <Utensils className="w-4.5 h-4.5" />
               </div>
               <h3 className="font-bold text-sm text-foreground">5 Campus Dining Stations</h3>
@@ -50,8 +50,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="p-5 rounded-2xl bg-card border border-border shadow-xs space-y-2">
-              <div className="h-9 w-9 rounded-xl bg-secondary-subtle text-secondary flex items-center justify-center">
+            <div className="p-5 rounded-sm bg-card border border-border shadow-xs space-y-2">
+              <div className="h-9 w-9 rounded-sm bg-secondary-subtle text-secondary flex items-center justify-center">
                 <Store className="w-4.5 h-4.5" />
               </div>
               <h3 className="font-bold text-sm text-foreground">Express Counter Pickup</h3>
@@ -60,8 +60,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="p-5 rounded-2xl bg-card border border-border shadow-xs space-y-2">
-              <div className="h-9 w-9 rounded-xl bg-primary-subtle text-primary flex items-center justify-center">
+            <div className="p-5 rounded-sm bg-card border border-border shadow-xs space-y-2">
+              <div className="h-9 w-9 rounded-sm bg-primary-subtle text-primary flex items-center justify-center">
                 <Sparkles className="w-4.5 h-4.5" />
               </div>
               <h3 className="font-bold text-sm text-foreground">Student ID Smart Pay</h3>
@@ -72,6 +72,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Global Campus Footer */}
+      <Footer />
     </div>
   );
 }

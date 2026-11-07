@@ -20,17 +20,17 @@ export interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const iconSizeStyles: Record<LogoSize, string> = {
-  sm: "h-9 w-auto",
-  md: "h-11 w-auto",
-  lg: "h-12 sm:h-13 md:h-14 w-auto",
+  sm: "h-9 sm:h-10 w-auto",
+  md: "h-11 sm:h-12 w-auto",
+  lg: "h-13 sm:h-14 md:h-15 w-auto",
   xl: "h-16 sm:h-18 w-auto",
 };
 
 const fullSizeStyles: Record<LogoSize, string> = {
-  sm: "h-8 sm:h-9 w-auto",
-  md: "h-11 sm:h-12 w-auto",
-  lg: "h-14 sm:h-16 w-auto",
-  xl: "h-18 sm:h-20 w-auto",
+  sm: "h-9 sm:h-11 w-auto",
+  md: "h-12 sm:h-14 w-auto",
+  lg: "h-16 sm:h-18 md:h-20 w-auto",
+  xl: "h-22 sm:h-26 md:h-30 w-auto",
 };
 
 export function Logo({
