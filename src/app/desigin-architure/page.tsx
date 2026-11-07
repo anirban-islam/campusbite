@@ -30,6 +30,7 @@ export default function DesignArchitecturePage() {
   const [dropdownRequired, setDropdownRequired] = useState(true);
   const [dropdownError, setDropdownError] = useState(false);
   const [dropdownLeftIcon, setDropdownLeftIcon] = useState(true);
+  const [dropdownHideScrollbar, setDropdownHideScrollbar] = useState(false);
 
   // Button Playground State
   const [btnVariant, setBtnVariant] = useState<ButtonVariant>("primary");
@@ -311,6 +312,16 @@ export default function DesignArchitecturePage() {
                         />
                         <span>Left Icon</span>
                       </label>
+
+                      <label className="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={dropdownHideScrollbar}
+                          onChange={(e) => setDropdownHideScrollbar(e.target.checked)}
+                          className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                        />
+                        <span>Hide Scrollbar (`hideScrollbar`)</span>
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -336,6 +347,7 @@ export default function DesignArchitecturePage() {
                       error={dropdownError ? "Please select a designated campus location" : undefined}
                       helperText={!dropdownError ? "Your hot meal will be prepared near this station." : undefined}
                       leftIcon={dropdownLeftIcon ? <PinIcon /> : undefined}
+                      hideScrollbar={dropdownHideScrollbar}
                     />
                   </div>
 

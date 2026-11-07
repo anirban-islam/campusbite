@@ -32,6 +32,7 @@ export interface DropdownProps {
   leftIcon?: React.ReactNode;
   isSearchable?: boolean;
   searchPlaceholder?: string;
+  hideScrollbar?: boolean;
   className?: string;
   containerClassName?: string;
 }
@@ -45,25 +46,66 @@ const variantStyles: Record<DropdownVariant, string> = {
     "border border-primary-100 bg-primary-subtle/30 hover:border-primary-200 focus:bg-card focus:border-primary focus:ring-2 focus:ring-primary/20",
 };
 
-const sizeStyles: Record<DropdownSize, { trigger: string; text: string; icon: string }> = {
+const sizeStyles: Record<
+  DropdownSize,
+  {
+    trigger: string;
+    text: string;
+    icon: string;
+    item: string;
+    search: string;
+    searchPadding: string;
+    searchIcon: string;
+  }
+> = {
   sm: {
     trigger: "h-8 px-2.5 text-xs gap-1.5",
     text: "text-xs",
     icon: "w-3.5 h-3.5",
+    item: "px-2.5 py-1.5 text-xs",
+    search: "h-7 text-xs px-2.5 pl-7",
+    searchPadding: "p-1.5",
+    searchIcon: "w-3 h-3 left-2",
   },
   md: {
     trigger: "h-10 px-3.5 text-sm gap-2",
     text: "text-sm",
     icon: "w-4 h-4",
+    item: "px-3 py-2 text-sm",
+    search: "h-8.5 text-xs px-3 pl-8",
+    searchPadding: "p-2",
+    searchIcon: "w-3.5 h-3.5 left-2.5",
   },
   lg: {
     trigger: "h-12 px-4 text-base gap-2.5",
     text: "text-base",
     icon: "w-5 h-5",
+    item: "px-3.5 py-2.5 text-base",
+    search: "h-10 text-sm px-3.5 pl-9",
+    searchPadding: "p-2.5",
+    searchIcon: "w-4 h-4 left-3",
   },
 };
 
 const roundedStyles: Record<DropdownRounded, string> = {
+  none: "rounded-none",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  full: "rounded-full",
+};
+
+const menuRoundedStyles: Record<DropdownRounded, string> = {
+  none: "rounded-none",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  full: "rounded-2xl",
+};
+
+const itemRoundedStyles: Record<DropdownRounded, string> = {
   none: "rounded-none",
   sm: "rounded-sm",
   md: "rounded-md",
@@ -89,6 +131,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   leftIcon,
   isSearchable = false,
   searchPlaceholder = "Search options...",
+  hideScrollbar = false,
   className,
   containerClassName,
 }) => {
@@ -167,10 +210,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     : options;
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("w-full space-y-1.5 text-left relative", containerClassName)}
-    >
+    <div className={cn("w-full space-y-1.5 text-left", containerClassName)}>
       {/* Label */}
       {label && (
         <label
@@ -185,89 +225,120 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </label>
       )}
 
-      {/* Trigger Button */}
-      <button
-        type="button"
-        disabled={disabled}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-        aria-labelledby={label ? `${generatedId}-label` : undefined}
-        onClick={() => setIsOpen((prev) => !prev)}
-        className={cn(
-          "w-full flex items-center justify-between text-left transition-all duration-150 outline-none select-none cursor-pointer",
-          "disabled:opacity-50 disabled:bg-muted disabled:cursor-not-allowed",
-          variantStyles[variant],
-          roundedStyles[rounded],
-          currentSize.trigger,
-          isOpen && "border-primary ring-2 ring-primary/20",
-          hasError &&
-            "border-destructive hover:border-destructive focus:border-destructive focus:ring-destructive/20",
-          className
-        )}
-      >
-        <div className="flex items-center gap-2 overflow-hidden truncate">
-          {leftIcon && (
-            <span className="shrink-0 text-muted-foreground">{leftIcon}</span>
+      {/* Button & Dropdown Menu Wrapper */}
+      <div ref={containerRef} className="relative w-full">
+        {/* Trigger Button */}
+        <button
+          type="button"
+          disabled={disabled}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-labelledby={label ? `${generatedId}-label` : undefined}
+          onClick={() => setIsOpen((prev) => !prev)}
+          className={cn(
+            "w-full flex items-center justify-between text-left transition-all duration-150 outline-none select-none cursor-pointer",
+            "disabled:opacity-50 disabled:bg-muted disabled:cursor-not-allowed",
+            variantStyles[variant],
+            roundedStyles[rounded],
+            currentSize.trigger,
+            isOpen && "border-primary ring-2 ring-primary/20",
+            hasError &&
+              "border-destructive hover:border-destructive focus:border-destructive focus:ring-destructive/20",
+            className
           )}
-          {selectedOption?.icon && (
-            <span className="shrink-0">{selectedOption.icon}</span>
-          )}
-          <span
+        >
+          <div className="flex items-center gap-2 overflow-hidden truncate">
+            {leftIcon && (
+              <span className="shrink-0 text-muted-foreground">{leftIcon}</span>
+            )}
+            {selectedOption?.icon && (
+              <span className="shrink-0">{selectedOption.icon}</span>
+            )}
+            <span
+              className={cn(
+                "truncate",
+                currentSize.text,
+                selectedOption ? "text-foreground font-medium" : "text-muted-foreground"
+              )}
+            >
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+          </div>
+
+          {/* Chevron Icon */}
+          <svg
             className={cn(
-              "truncate",
-              currentSize.text,
-              selectedOption ? "text-foreground font-medium" : "text-muted-foreground"
+              "shrink-0 text-muted-foreground transition-transform duration-200",
+              currentSize.icon,
+              isOpen && "rotate-180 text-primary"
+            )}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        {/* Dropdown Menu Panel */}
+        {isOpen && (
+          <div
+            role="listbox"
+            className={cn(
+              "absolute top-full left-0 z-50 mt-1 w-full bg-card border border-border shadow-lg overflow-hidden animate-in fade-in-0 zoom-in-95 duration-100",
+              menuRoundedStyles[rounded]
             )}
           >
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
-        </div>
-
-        {/* Chevron Icon */}
-        <svg
-          className={cn(
-            "shrink-0 text-muted-foreground transition-transform duration-200",
-            currentSize.icon,
-            isOpen && "rotate-180 text-primary"
-          )}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-
-      {/* Dropdown Menu Panel */}
-      {isOpen && (
-        <div
-          role="listbox"
-          className={cn(
-            "absolute z-50 mt-1.5 w-full bg-card border border-border shadow-lg overflow-hidden animate-in fade-in-0 zoom-in-95 duration-100",
-            rounded === "none" ? "rounded-none" : "rounded-xl"
-          )}
-        >
           {/* Optional Search Input */}
           {isSearchable && (
-            <div className="p-2 border-b border-border bg-muted/30">
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={searchPlaceholder}
-                className="w-full px-3 py-1.5 text-xs rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-              />
+            <div className={cn("border-b border-border bg-muted/20", currentSize.searchPadding)}>
+              <div className="relative flex items-center">
+                <svg
+                  className={cn(
+                    "absolute top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none",
+                    currentSize.searchIcon
+                  )}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className={cn(
+                    "w-full border border-border bg-card text-foreground placeholder:text-muted-foreground",
+                    "transition-all duration-150 outline-none",
+                    "hover:border-primary-300 focus:border-primary focus:ring-2 focus:ring-primary/20",
+                    currentSize.search,
+                    itemRoundedStyles[rounded]
+                  )}
+                />
+              </div>
             </div>
           )}
 
           {/* Options List */}
-          <div className="max-h-60 overflow-y-auto p-1.5 space-y-0.5">
+          <div
+            className={cn(
+              "max-h-60 overflow-y-auto p-1.5 space-y-0.5",
+              hideScrollbar ? "scrollbar-none" : "scrollbar-thin"
+            )}
+          >
             {filteredOptions.length === 0 ? (
               <div className="py-4 text-center text-xs text-muted-foreground">
                 No options found.
@@ -285,8 +356,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     disabled={opt.disabled}
                     onClick={() => handleSelect(opt)}
                     className={cn(
-                      "w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors cursor-pointer select-none",
-                      currentSize.text,
+                      "w-full flex items-center justify-between text-left transition-colors cursor-pointer select-none",
+                      currentSize.item,
+                      itemRoundedStyles[rounded],
                       opt.disabled && "opacity-40 cursor-not-allowed pointer-events-none",
                       isSelected
                         ? "bg-primary-subtle text-primary font-semibold"
@@ -330,6 +402,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           </div>
         </div>
       )}
+      </div>
 
       {/* Error / Helper text */}
       {hasError && typeof error === "string" ? (
