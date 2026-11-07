@@ -27,6 +27,11 @@ import {
   BadgeVariant,
   BadgeSize,
   BadgeRounded,
+  RadioGroup,
+  RadioGroupItem,
+  RadioSize,
+  RadioVariant,
+  RadioOrientation,
 } from "@/components/ui";
 import {
   CartIcon,
@@ -43,10 +48,21 @@ import {
   Sparkles,
   Tag,
   Check,
+  Bike,
+  Clock,
+  CreditCard,
 } from "@/lib/icons";
 
 export default function DesignArchitecturePage() {
-  const [activeTab, setActiveTab] = useState<"badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("badge");
+  const [activeTab, setActiveTab] = useState<"radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("radiogroup");
+
+  // RadioGroup Playground State
+  const [radioSize, setRadioSize] = useState<RadioSize>("md");
+  const [radioVariant, setRadioVariant] = useState<RadioVariant>("card");
+  const [radioOrientation, setRadioOrientation] = useState<RadioOrientation>("vertical");
+  const [radioValue, setRadioValue] = useState("delivery");
+  const [radioHasError, setRadioHasError] = useState(false);
+  const [radioDisabled, setRadioDisabled] = useState(false);
 
   // Badge Playground State
   const [badgeVariant, setBadgeVariant] = useState<BadgeVariant>("popular");
@@ -176,6 +192,16 @@ export default function DesignArchitecturePage() {
           {/* Navigation Tabs */}
           <div className="flex flex-wrap gap-2 pt-2">
             <button
+              onClick={() => setActiveTab("radiogroup")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "radiogroup"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Radio Group Component
+            </button>
+            <button
               onClick={() => setActiveTab("badge")}
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                 activeTab === "badge"
@@ -237,6 +263,297 @@ export default function DesignArchitecturePage() {
             </button>
           </div>
         </header>
+
+        {/* ======================= RADIO GROUP COMPONENT TAB ======================= */}
+        {activeTab === "radiogroup" && (
+          <div className="space-y-10">
+            {/* Interactive RadioGroup Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Interactive RadioGroup Playground</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Single-choice selection component supporting standard radio indicators, horizontal flows, and food-ordering card tiles.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Variant */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Variant (`variant`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["default", "card"] as RadioVariant[]).map((v) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => setRadioVariant(v)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all capitalize ${
+                            radioVariant === v
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Size (`size`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["sm", "md", "lg"] as RadioSize[]).map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setRadioSize(s)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                            radioSize === s
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Orientation */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Orientation (`orientation`)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["vertical", "horizontal"] as RadioOrientation[]).map((o) => (
+                        <button
+                          key={o}
+                          type="button"
+                          onClick={() => setRadioOrientation(o)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all capitalize ${
+                            radioOrientation === o
+                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              : "bg-card text-foreground border-border hover:bg-muted"
+                          }`}
+                        >
+                          {o}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* State Toggles */}
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Interactive States
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <Checkbox
+                        size="sm"
+                        label="Error state"
+                        checked={radioHasError}
+                        onChange={(e) => setRadioHasError(e.target.checked)}
+                      />
+                      <Checkbox
+                        size="sm"
+                        label="Disabled group"
+                        checked={radioDisabled}
+                        onChange={(e) => setRadioDisabled(e.target.checked)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Preview Display */}
+                <div className="lg:col-span-5 bg-background/50 border border-border rounded-xl p-6 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">
+                        Live Preview
+                      </span>
+                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-muted text-foreground">
+                        Selected: <strong className="text-primary font-bold">{radioValue}</strong>
+                      </span>
+                    </div>
+
+                    <div className="p-4 rounded-xl border border-dashed border-border/80 bg-card">
+                      <RadioGroup
+                        value={radioValue}
+                        onChange={setRadioValue}
+                        size={radioSize}
+                        variant={radioVariant}
+                        orientation={radioOrientation}
+                        disabled={radioDisabled}
+                        error={radioHasError ? "Please select a fulfillment method to proceed." : undefined}
+                        label="Select Campus Fulfillment Method"
+                        required
+                        helperText="Estimated arrival times updated live based on kitchen queue."
+                      >
+                        <RadioGroupItem
+                          value="delivery"
+                          label="Dorm Delivery"
+                          description="Courier delivers straight to your residential hall entrance."
+                          icon={<Bike />}
+                          badge={<Badge variant="popular" size="sm">Fastest</Badge>}
+                        />
+                        <RadioGroupItem
+                          value="pickup"
+                          label="Express Counter Pickup"
+                          description="Skip lines at Campus Central Dining Hall, Counter #4."
+                          icon={<Store />}
+                          badge={<Badge variant="available" size="sm">Ready in 5m</Badge>}
+                        />
+                        <RadioGroupItem
+                          value="dine_in"
+                          label="Cafeteria Dine-In"
+                          description="Reserved seating at Student Center table with food bell."
+                          icon={<Utensils />}
+                        />
+                      </RadioGroup>
+                    </div>
+                  </div>
+
+                  {/* Code snippet */}
+                  <div className="bg-card p-4 rounded-xl border border-border text-xs font-mono text-muted-foreground overflow-x-auto">
+                    <code>
+                      {`<RadioGroup value="${radioValue}" size="${radioSize}" variant="${radioVariant}">\n  <RadioGroupItem value="delivery" label="Dorm Delivery" />\n  <RadioGroupItem value="pickup" label="Express Pickup" />\n</RadioGroup>`}
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Food Ordering Real-World Card Radios */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Food Ordering Real-World Scenarios</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  How RadioGroup is applied across CampusBite meal customizations, portions, and payments.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Scenario 1: Portion Size Selector */}
+                <div className="p-6 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <h3 className="font-bold text-foreground flex items-center justify-between">
+                    <span>1. Portion Size Options</span>
+                    <Badge variant="subtle" size="sm">Required</Badge>
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Card radio selector for double patties, sides, and drink combos.
+                  </p>
+
+                  <RadioGroup defaultValue="regular" variant="card" size="md">
+                    <RadioGroupItem
+                      value="small"
+                      label="Standard Single Patty"
+                      description="120g beef patty with classic house seasoning."
+                      badge={<span className="text-xs font-mono font-bold text-foreground">$5.50</span>}
+                    />
+                    <RadioGroupItem
+                      value="regular"
+                      label="Double Deluxe Combo"
+                      description="Two patties + melted cheese + seasoned campus fries."
+                      badge={<span className="text-xs font-mono font-bold text-primary">$8.20</span>}
+                    />
+                    <RadioGroupItem
+                      value="jumbo"
+                      label="Campus Beast Monster Box"
+                      description="Three patties + bacon + waffle fries + beverage."
+                      badge={<span className="text-xs font-mono font-bold text-foreground">$11.00</span>}
+                    />
+                  </RadioGroup>
+                </div>
+
+                {/* Scenario 2: Payment Method */}
+                <div className="p-6 rounded-2xl border border-border bg-card/60 space-y-4">
+                  <h3 className="font-bold text-foreground flex items-center justify-between">
+                    <span>2. Campus Checkout Payment</span>
+                    <Badge variant="subtle" size="sm">Single Choice</Badge>
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Quick tap radio choices supporting Student ID card balance or credit.
+                  </p>
+
+                  <RadioGroup defaultValue="campus_card" variant="card" size="md">
+                    <RadioGroupItem
+                      value="campus_card"
+                      label="Campus ID Smart Pay"
+                      description="Deduct from semester meal balance: $84.50 remaining."
+                      icon={<CreditCard />}
+                      badge={<Badge variant="discount" size="sm">5% Student Rebate</Badge>}
+                    />
+                    <RadioGroupItem
+                      value="credit_card"
+                      label="Credit / Debit Card"
+                      description="Visa, Mastercard, or Google Pay via campus terminal."
+                      icon={<CreditCard />}
+                    />
+                    <RadioGroupItem
+                      value="cash_counter"
+                      label="Pay with Cash at Counter"
+                      description="Pay physical currency when collecting your order."
+                      icon={<Store />}
+                    />
+                  </RadioGroup>
+                </div>
+              </div>
+            </section>
+
+            {/* Standard Circular Radios & Horizontal Scales */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Standard Circular Radios & Sizes</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Classic circular indicators with centered typography and balanced scales.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Size sm */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    size="sm" (compact)
+                  </span>
+                  <RadioGroup defaultValue="medium" size="sm" label="Spice Preference">
+                    <RadioGroupItem value="mild" label="Mild (Gentle herbs)" />
+                    <RadioGroupItem value="medium" label="Medium (Jalapeño kick)" />
+                    <RadioGroupItem value="hot" label="Ghost Chili (Extreme)" />
+                  </RadioGroup>
+                </div>
+
+                {/* Size md */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    size="md" (default)
+                  </span>
+                  <RadioGroup defaultValue="medium" size="md" label="Beverage Temperature">
+                    <RadioGroupItem value="iced" label="Extra Iced" description="Chilled with cube ice" />
+                    <RadioGroupItem value="room" label="Room Temperature" description="No ice added" />
+                    <RadioGroupItem value="hot" label="Steamed Hot" description="Served at 70°C" />
+                  </RadioGroup>
+                </div>
+
+                {/* Size lg */}
+                <div className="p-5 rounded-xl border border-border bg-background/50 space-y-3">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    size="lg" (prominent)
+                  </span>
+                  <RadioGroup defaultValue="fast" size="lg" label="Delivery Urgency">
+                    <RadioGroupItem value="standard" label="Standard (25-30m)" />
+                    <RadioGroupItem value="fast" label="Priority Rush (10-15m)" />
+                  </RadioGroup>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* ======================= BADGE COMPONENT TAB ======================= */}
         {activeTab === "badge" && (
