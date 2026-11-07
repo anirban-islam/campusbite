@@ -71,6 +71,14 @@ import {
   EmptyStateTitle,
   EmptyStateDescription,
   EmptyStateActions,
+  toast,
+  Toaster,
+  ToastVariant,
+  ToastPosition,
+  ToastRounded,
+  Toast,
+  ToastTitle,
+  ToastDescription,
 } from "@/components/ui";
 import {
   CartIcon,
@@ -93,7 +101,16 @@ import {
 } from "@/lib/icons";
 
 export default function DesignArchitecturePage() {
-  const [activeTab, setActiveTab] = useState<"emptystate" | "skeleton" | "drawer" | "dialog" | "radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("emptystate");
+  const [activeTab, setActiveTab] = useState<"toast" | "emptystate" | "skeleton" | "drawer" | "dialog" | "radiogroup" | "badge" | "textarea" | "checkbox" | "dropdown" | "input" | "button">("toast");
+
+  // Toast Playground State
+  const [toastVariant, setToastVariant] = useState<ToastVariant>("brand");
+  const [toastPosition, setToastPosition] = useState<ToastPosition>("bottom-right");
+  const [toastRounded, setToastRounded] = useState<ToastRounded>("2xl");
+  const [toastDuration, setToastDuration] = useState<number>(4000);
+  const [toastShowAction, setToastShowAction] = useState<boolean>(true);
+  const [toastShowProgress, setToastShowProgress] = useState<boolean>(true);
+  const [isSimulatingPromise, setIsSimulatingPromise] = useState(false);
 
   // EmptyState Playground State
   const [emptyVariant, setEmptyVariant] = useState<EmptyStateVariant>("dashed");
@@ -258,6 +275,16 @@ export default function DesignArchitecturePage() {
           {/* Navigation Tabs */}
           <div className="flex flex-wrap gap-2 pt-2">
             <button
+              onClick={() => setActiveTab("toast")}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeTab === "toast"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-card border border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              Toast Component
+            </button>
+            <button
               onClick={() => setActiveTab("emptystate")}
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                 activeTab === "emptystate"
@@ -369,6 +396,464 @@ export default function DesignArchitecturePage() {
             </button>
           </div>
         </header>
+
+        {/* ======================= TOAST NOTIFICATION COMPONENT TAB ======================= */}
+        {activeTab === "toast" && (
+          <div className="space-y-10">
+            {/* Interactive Toast Playground */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-8">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight">Interactive Toast Notification Playground</h2>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Lightweight notification toasts with GPU animations, auto-dismiss progress countdown, hover pause, action triggers, and configurable corner radius.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => toast.dismissAll()}
+                  >
+                    Dismiss All Toasts
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Controls */}
+                <div className="lg:col-span-5 space-y-5 bg-muted/20 border border-border p-5 rounded-xl">
+                  {/* Variant Selection */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Variant (<code className="text-primary font-mono text-[11px]">{toastVariant}</code>)
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {(["brand", "success", "error", "warning", "info", "default"] as ToastVariant[]).map((v) => (
+                        <button
+                          key={v}
+                          onClick={() => setToastVariant(v)}
+                          className={cn(
+                            "px-2.5 py-1.5 text-xs font-semibold rounded-lg border capitalize transition-all",
+                            toastVariant === v
+                              ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                              : "bg-card border-border text-foreground hover:bg-muted"
+                          )}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Position Selection */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Screen Position (<code className="text-primary font-mono text-[11px]">{toastPosition}</code>)
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {(
+                        [
+                          "top-left",
+                          "top-center",
+                          "top-right",
+                          "bottom-left",
+                          "bottom-center",
+                          "bottom-right",
+                        ] as ToastPosition[]
+                      ).map((pos) => (
+                        <button
+                          key={pos}
+                          onClick={() => setToastPosition(pos)}
+                          className={cn(
+                            "px-2 py-1.5 text-[11px] font-semibold rounded-md border transition-all text-center",
+                            toastPosition === pos
+                              ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                              : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          {pos}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Corner Radius (`rounded`) */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Corner Radius (<code className="text-primary font-mono text-[11px]">{toastRounded}</code>)
+                    </label>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {(["none", "sm", "md", "lg", "xl", "2xl", "3xl", "full"] as ToastRounded[]).map((r) => (
+                        <button
+                          key={r}
+                          onClick={() => setToastRounded(r)}
+                          className={cn(
+                            "py-1 text-[11px] font-semibold rounded-md border transition-all",
+                            toastRounded === r
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Duration Selection */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-foreground tracking-wide">
+                      Duration Timer
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { label: "3s", value: 3000 },
+                        { label: "5s", value: 5000 },
+                        { label: "8s", value: 8000 },
+                        { label: "Sticky (0s)", value: 0 },
+                      ].map((item) => (
+                        <button
+                          key={item.label}
+                          onClick={() => setToastDuration(item.value)}
+                          className={cn(
+                            "flex-1 py-1.5 text-xs font-semibold rounded-lg border transition-all",
+                            toastDuration === item.value
+                              ? "bg-primary text-primary-foreground border-primary shadow-2xs"
+                              : "bg-card border-border text-foreground hover:bg-muted"
+                          )}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Feature Toggles */}
+                  <div className="pt-2 border-t border-border/80 flex flex-col gap-2">
+                    <label className="inline-flex items-center gap-2 text-xs font-medium cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={toastShowAction}
+                        onChange={(e) => setToastShowAction(e.target.checked)}
+                        className="rounded accent-primary"
+                      />
+                      Include Action Button (<code className="text-primary font-mono text-[10px]">action: &#123; label, onClick &#125;</code>)
+                    </label>
+                    <label className="inline-flex items-center gap-2 text-xs font-medium cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={toastShowProgress}
+                        onChange={(e) => setToastShowProgress(e.target.checked)}
+                        className="rounded accent-primary"
+                      />
+                      Show Countdown Progress Bar
+                    </label>
+                  </div>
+
+                  {/* Trigger Main Button */}
+                  <Button
+                    size="sm"
+                    className="w-full"
+                    onClick={() => {
+                      toast[toastVariant](`New ${toastVariant.toUpperCase()} Toast Notification`, {
+                        description: `Demonstrating dynamic toast with ${toastRounded} corner radius and hover pause.`,
+                        rounded: toastRounded,
+                        duration: toastDuration,
+                        showProgress: toastShowProgress,
+                        action: toastShowAction
+                          ? {
+                              label: "Action",
+                              onClick: () => console.log("Toast action clicked!"),
+                            }
+                          : undefined,
+                      });
+                    }}
+                  >
+                    Fire Configured Toast
+                  </Button>
+                </div>
+
+                {/* Live Preview & Code */}
+                <div className="lg:col-span-7 space-y-5">
+                  <div className="p-6 bg-muted/10 border border-border/70 rounded-2xl flex flex-col items-center justify-center min-h-[220px] space-y-4">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Static Component Preview ({toastVariant} • rounded-{toastRounded})
+                    </span>
+                    <Toast variant={toastVariant} rounded={toastRounded} className="max-w-md shadow-md">
+                      <div className="flex-1 min-w-0">
+                        <ToastTitle>{toastVariant.toUpperCase()} Campus Notification</ToastTitle>
+                        <ToastDescription>
+                          Hover over any active toast to pause its auto-dismiss countdown.
+                        </ToastDescription>
+                        {toastShowAction && (
+                          <div className="mt-2.5">
+                            <Button size="sm" variant={toastVariant === "brand" ? "primary" : "outline"} rounded="sm">
+                              View Order Details
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </Toast>
+                  </div>
+
+                  {/* Code snippet */}
+                  <div className="p-4 rounded-xl bg-muted/40 border border-border font-mono text-xs overflow-x-auto text-muted-foreground">
+                    <span className="text-primary">toast.{toastVariant}</span>(
+                    <br />
+                    &nbsp;&nbsp;&quot;Order updated successfully&quot;,
+                    <br />
+                    &nbsp;&nbsp;&#123;
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;description: &quot;Your cart total is updated.&quot;,
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;rounded: &quot;{toastRounded}&quot;,
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;duration: {toastDuration},
+                    {toastShowAction && (
+                      <>
+                        <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;action: &#123; label: &quot;View Tray&quot;, onClick: () =&gt; &#123;&#125; &#125;,
+                      </>
+                    )}
+                    <br />
+                    &nbsp;&nbsp;&#125;
+                    <br />
+                    );
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Real World Campus Food Ordering Scenarios */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Real-World Campus Food Ordering Scenarios</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Click any card to fire realistic food ordering notifications directly onto your screen.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* 1. Item Added to Tray */}
+                <div className="p-5 bg-card border border-border rounded-xl space-y-3 flex flex-col justify-between hover:border-primary/50 transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-primary uppercase tracking-wider">Campus Tray</span>
+                      <Badge variant="popular" size="sm">Brand</Badge>
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Item Added to Tray</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Fires when a student adds pizza, burrito, or beverage to order.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    rounded={toastRounded}
+                    onClick={() => {
+                      toast.brand("Artisan Pepperoni Pizza added", {
+                        description: "1 item • $8.50. Prep queue at Central Dining Counter #2.",
+                        rounded: toastRounded,
+                        action: {
+                          label: "View Tray",
+                          onClick: () => console.log("Open tray clicked"),
+                        },
+                      });
+                    }}
+                  >
+                    Test &quot;Item Added&quot;
+                  </Button>
+                </div>
+
+                {/* 2. Payment Charged */}
+                <div className="p-5 bg-card border border-border rounded-xl space-y-3 flex flex-col justify-between hover:border-emerald-500/50 transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Payment</span>
+                      <Badge variant="available" size="sm">Success</Badge>
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Smart Pay Deduction</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Fires when meal amount is charged to student ID or card balance.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    rounded={toastRounded}
+                    onClick={() => {
+                      toast.success("Payment Received ($14.70)", {
+                        description: "Deducted from student meal balance. Remaining: $69.80.",
+                        rounded: toastRounded,
+                        action: {
+                          label: "Receipt",
+                          onClick: () => console.log("Open receipt clicked"),
+                        },
+                      });
+                    }}
+                  >
+                    Test &quot;Payment Success&quot;
+                  </Button>
+                </div>
+
+                {/* 3. Out of Stock Warning */}
+                <div className="p-5 bg-card border border-border rounded-xl space-y-3 flex flex-col justify-between hover:border-destructive/50 transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-destructive uppercase tracking-wider">Kitchen Alert</span>
+                      <Badge variant="destructive" size="sm">Error</Badge>
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Dish Out of Stock</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Alerts student if the chef ran out of a selected ingredient.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    rounded={toastRounded}
+                    onClick={() => {
+                      toast.error("Dish Out of Stock", {
+                        description: "Smoked Turkey Ciabatta sold out at Student Center Grill.",
+                        rounded: toastRounded,
+                        action: {
+                          label: "Swap Item",
+                          onClick: () => console.log("Swap item clicked"),
+                        },
+                      });
+                    }}
+                  >
+                    Test &quot;Out of Stock&quot;
+                  </Button>
+                </div>
+
+                {/* 4. Station Closing Warning */}
+                <div className="p-5 bg-card border border-border rounded-xl space-y-3 flex flex-col justify-between hover:border-amber-500/50 transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">Schedule</span>
+                      <Badge variant="popular" size="sm">Warning</Badge>
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Counter Closing in 10m</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Warns student that station is closing for dinner service.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    rounded={toastRounded}
+                    onClick={() => {
+                      toast.warning("Station Closing in 10m", {
+                        description: "Late Night Wok counter stops taking orders at 10:00 PM.",
+                        rounded: toastRounded,
+                        action: {
+                          label: "Order Fast",
+                          onClick: () => console.log("Order fast clicked"),
+                        },
+                      });
+                    }}
+                  >
+                    Test &quot;Closing Warning&quot;
+                  </Button>
+                </div>
+
+                {/* 5. Pickup Ready Info */}
+                <div className="p-5 bg-card border border-border rounded-xl space-y-3 flex flex-col justify-between hover:border-sky-500/50 transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-sky-600 uppercase tracking-wider">Fulfillment</span>
+                      <Badge variant="secondary" size="sm">Info</Badge>
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Order Ready for Pickup</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Notifies student that order #CB-8924 is packed and ready.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    rounded={toastRounded}
+                    onClick={() => {
+                      toast.info("Order Ready for Pickup!", {
+                        description: "Campus Dining Counter #4 • Order #CB-8924 is ready.",
+                        rounded: toastRounded,
+                        action: {
+                          label: "Show Barcode",
+                          onClick: () => console.log("Show barcode clicked"),
+                        },
+                      });
+                    }}
+                  >
+                    Test &quot;Pickup Ready&quot;
+                  </Button>
+                </div>
+
+                {/* 6. Async Order Placement Promise */}
+                <div className="p-5 bg-card border border-border rounded-xl space-y-3 flex flex-col justify-between hover:border-primary/50 transition-colors">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-primary uppercase tracking-wider">Async Flow</span>
+                      <Badge variant="subtle" size="sm">Promise</Badge>
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Simulate Order Checkout</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Demonstrates <code className="text-primary font-mono text-[10px]">toast.promise()</code> with loading, success, and error states.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    rounded={toastRounded}
+                    isLoading={isSimulatingPromise}
+                    onClick={async () => {
+                      setIsSimulatingPromise(true);
+                      const placeOrderPromise = new Promise<{ orderId: string }>((resolve) =>
+                        setTimeout(() => resolve({ orderId: "#CB-9021" }), 2000)
+                      );
+
+                      try {
+                        await toast.promise(placeOrderPromise, {
+                          loading: "Transmitting order to campus kitchen...",
+                          success: (data) => `Order ${data.orderId} confirmed by chef!`,
+                          error: "Failed to connect to kitchen terminal",
+                        });
+                      } finally {
+                        setIsSimulatingPromise(false);
+                      }
+                    }}
+                  >
+                    Simulate Async Checkout
+                  </Button>
+                </div>
+              </div>
+            </section>
+
+            {/* Visual Variants Showcase */}
+            <section className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Visual Variants (6 Styles)</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Tailored color tokens for every state: <code className="text-xs font-mono text-primary">brand</code> (#c34e31), <code className="text-xs font-mono text-emerald-600">success</code>, <code className="text-xs font-mono text-destructive">error</code>, <code className="text-xs font-mono text-amber-600">warning</code>, <code className="text-xs font-mono text-sky-600">info</code>, and <code className="text-xs font-mono text-foreground">default</code>.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(["brand", "success", "error", "warning", "info", "default"] as ToastVariant[]).map((v) => (
+                  <Toast key={v} variant={v} rounded="2xl" className="shadow-xs">
+                    <div className="flex-1 min-w-0">
+                      <ToastTitle>{v.toUpperCase()} Notification</ToastTitle>
+                      <ToastDescription>
+                        Customized campus notification token styling.
+                      </ToastDescription>
+                    </div>
+                  </Toast>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* ======================= EMPTY STATE COMPONENT TAB ======================= */}
         {activeTab === "emptystate" && (
