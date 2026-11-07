@@ -6,8 +6,6 @@ import { Header, Footer, Announcement } from "@/components/layout";
 import { Logo, Button, Input, Badge, toast } from "@/components/ui";
 import { Mail, ArrowLeft, ArrowRight, Check } from "@/lib/icons";
 
-export const instant = true;
-
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);

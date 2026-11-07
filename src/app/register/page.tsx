@@ -15,8 +15,6 @@ import {
   GraduationCap,
 } from "@/lib/icons";
 
-export const instant = true;
-
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
